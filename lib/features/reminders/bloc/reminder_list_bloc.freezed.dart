@@ -20,27 +20,45 @@ mixin _$ReminderListEvent {
   TResult when<TResult extends Object?>({
     required TResult Function() remindersRequested,
     required TResult Function(ReminderFilter filter) filterChanged,
-    required TResult Function(Reminder reminder) reminderAdded,
-    required TResult Function(Reminder reminder) reminderUpdated,
-    required TResult Function(String id) reminderDeleted,
+    required TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)
+        reminderAdded,
+    required TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)
+        reminderUpdated,
+    required TResult Function(
+            String id, VoidCallback? onSuccess, void Function(String)? onError)
+        reminderDeleted,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? remindersRequested,
     TResult? Function(ReminderFilter filter)? filterChanged,
-    TResult? Function(Reminder reminder)? reminderAdded,
-    TResult? Function(Reminder reminder)? reminderUpdated,
-    TResult? Function(String id)? reminderDeleted,
+    TResult? Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderAdded,
+    TResult? Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderUpdated,
+    TResult? Function(
+            String id, VoidCallback? onSuccess, void Function(String)? onError)?
+        reminderDeleted,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? remindersRequested,
     TResult Function(ReminderFilter filter)? filterChanged,
-    TResult Function(Reminder reminder)? reminderAdded,
-    TResult Function(Reminder reminder)? reminderUpdated,
-    TResult Function(String id)? reminderDeleted,
+    TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderAdded,
+    TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderUpdated,
+    TResult Function(
+            String id, VoidCallback? onSuccess, void Function(String)? onError)?
+        reminderDeleted,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -138,9 +156,15 @@ class _$RemindersRequestedImpl implements _RemindersRequested {
   TResult when<TResult extends Object?>({
     required TResult Function() remindersRequested,
     required TResult Function(ReminderFilter filter) filterChanged,
-    required TResult Function(Reminder reminder) reminderAdded,
-    required TResult Function(Reminder reminder) reminderUpdated,
-    required TResult Function(String id) reminderDeleted,
+    required TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)
+        reminderAdded,
+    required TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)
+        reminderUpdated,
+    required TResult Function(
+            String id, VoidCallback? onSuccess, void Function(String)? onError)
+        reminderDeleted,
   }) {
     return remindersRequested();
   }
@@ -150,9 +174,15 @@ class _$RemindersRequestedImpl implements _RemindersRequested {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? remindersRequested,
     TResult? Function(ReminderFilter filter)? filterChanged,
-    TResult? Function(Reminder reminder)? reminderAdded,
-    TResult? Function(Reminder reminder)? reminderUpdated,
-    TResult? Function(String id)? reminderDeleted,
+    TResult? Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderAdded,
+    TResult? Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderUpdated,
+    TResult? Function(
+            String id, VoidCallback? onSuccess, void Function(String)? onError)?
+        reminderDeleted,
   }) {
     return remindersRequested?.call();
   }
@@ -162,9 +192,15 @@ class _$RemindersRequestedImpl implements _RemindersRequested {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? remindersRequested,
     TResult Function(ReminderFilter filter)? filterChanged,
-    TResult Function(Reminder reminder)? reminderAdded,
-    TResult Function(Reminder reminder)? reminderUpdated,
-    TResult Function(String id)? reminderDeleted,
+    TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderAdded,
+    TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderUpdated,
+    TResult Function(
+            String id, VoidCallback? onSuccess, void Function(String)? onError)?
+        reminderDeleted,
     required TResult orElse(),
   }) {
     if (remindersRequested != null) {
@@ -288,9 +324,15 @@ class _$FilterChangedImpl implements _FilterChanged {
   TResult when<TResult extends Object?>({
     required TResult Function() remindersRequested,
     required TResult Function(ReminderFilter filter) filterChanged,
-    required TResult Function(Reminder reminder) reminderAdded,
-    required TResult Function(Reminder reminder) reminderUpdated,
-    required TResult Function(String id) reminderDeleted,
+    required TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)
+        reminderAdded,
+    required TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)
+        reminderUpdated,
+    required TResult Function(
+            String id, VoidCallback? onSuccess, void Function(String)? onError)
+        reminderDeleted,
   }) {
     return filterChanged(filter);
   }
@@ -300,9 +342,15 @@ class _$FilterChangedImpl implements _FilterChanged {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? remindersRequested,
     TResult? Function(ReminderFilter filter)? filterChanged,
-    TResult? Function(Reminder reminder)? reminderAdded,
-    TResult? Function(Reminder reminder)? reminderUpdated,
-    TResult? Function(String id)? reminderDeleted,
+    TResult? Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderAdded,
+    TResult? Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderUpdated,
+    TResult? Function(
+            String id, VoidCallback? onSuccess, void Function(String)? onError)?
+        reminderDeleted,
   }) {
     return filterChanged?.call(filter);
   }
@@ -312,9 +360,15 @@ class _$FilterChangedImpl implements _FilterChanged {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? remindersRequested,
     TResult Function(ReminderFilter filter)? filterChanged,
-    TResult Function(Reminder reminder)? reminderAdded,
-    TResult Function(Reminder reminder)? reminderUpdated,
-    TResult Function(String id)? reminderDeleted,
+    TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderAdded,
+    TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderUpdated,
+    TResult Function(
+            String id, VoidCallback? onSuccess, void Function(String)? onError)?
+        reminderDeleted,
     required TResult orElse(),
   }) {
     if (filterChanged != null) {
@@ -383,7 +437,10 @@ abstract class _$$ReminderAddedImplCopyWith<$Res> {
           _$ReminderAddedImpl value, $Res Function(_$ReminderAddedImpl) then) =
       __$$ReminderAddedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({Reminder reminder});
+  $Res call(
+      {Reminder reminder,
+      VoidCallback? onSuccess,
+      void Function(String)? onError});
 
   $ReminderCopyWith<$Res> get reminder;
 }
@@ -402,12 +459,22 @@ class __$$ReminderAddedImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? reminder = null,
+    Object? onSuccess = freezed,
+    Object? onError = freezed,
   }) {
     return _then(_$ReminderAddedImpl(
       null == reminder
           ? _value.reminder
           : reminder // ignore: cast_nullable_to_non_nullable
               as Reminder,
+      onSuccess: freezed == onSuccess
+          ? _value.onSuccess
+          : onSuccess // ignore: cast_nullable_to_non_nullable
+              as VoidCallback?,
+      onError: freezed == onError
+          ? _value.onError
+          : onError // ignore: cast_nullable_to_non_nullable
+              as void Function(String)?,
     ));
   }
 
@@ -425,14 +492,18 @@ class __$$ReminderAddedImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$ReminderAddedImpl implements _ReminderAdded {
-  const _$ReminderAddedImpl(this.reminder);
+  const _$ReminderAddedImpl(this.reminder, {this.onSuccess, this.onError});
 
   @override
   final Reminder reminder;
+  @override
+  final VoidCallback? onSuccess;
+  @override
+  final void Function(String)? onError;
 
   @override
   String toString() {
-    return 'ReminderListEvent.reminderAdded(reminder: $reminder)';
+    return 'ReminderListEvent.reminderAdded(reminder: $reminder, onSuccess: $onSuccess, onError: $onError)';
   }
 
   @override
@@ -441,11 +512,14 @@ class _$ReminderAddedImpl implements _ReminderAdded {
         (other.runtimeType == runtimeType &&
             other is _$ReminderAddedImpl &&
             (identical(other.reminder, reminder) ||
-                other.reminder == reminder));
+                other.reminder == reminder) &&
+            (identical(other.onSuccess, onSuccess) ||
+                other.onSuccess == onSuccess) &&
+            (identical(other.onError, onError) || other.onError == onError));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, reminder);
+  int get hashCode => Object.hash(runtimeType, reminder, onSuccess, onError);
 
   /// Create a copy of ReminderListEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -460,11 +534,17 @@ class _$ReminderAddedImpl implements _ReminderAdded {
   TResult when<TResult extends Object?>({
     required TResult Function() remindersRequested,
     required TResult Function(ReminderFilter filter) filterChanged,
-    required TResult Function(Reminder reminder) reminderAdded,
-    required TResult Function(Reminder reminder) reminderUpdated,
-    required TResult Function(String id) reminderDeleted,
+    required TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)
+        reminderAdded,
+    required TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)
+        reminderUpdated,
+    required TResult Function(
+            String id, VoidCallback? onSuccess, void Function(String)? onError)
+        reminderDeleted,
   }) {
-    return reminderAdded(reminder);
+    return reminderAdded(reminder, onSuccess, onError);
   }
 
   @override
@@ -472,11 +552,17 @@ class _$ReminderAddedImpl implements _ReminderAdded {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? remindersRequested,
     TResult? Function(ReminderFilter filter)? filterChanged,
-    TResult? Function(Reminder reminder)? reminderAdded,
-    TResult? Function(Reminder reminder)? reminderUpdated,
-    TResult? Function(String id)? reminderDeleted,
+    TResult? Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderAdded,
+    TResult? Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderUpdated,
+    TResult? Function(
+            String id, VoidCallback? onSuccess, void Function(String)? onError)?
+        reminderDeleted,
   }) {
-    return reminderAdded?.call(reminder);
+    return reminderAdded?.call(reminder, onSuccess, onError);
   }
 
   @override
@@ -484,13 +570,19 @@ class _$ReminderAddedImpl implements _ReminderAdded {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? remindersRequested,
     TResult Function(ReminderFilter filter)? filterChanged,
-    TResult Function(Reminder reminder)? reminderAdded,
-    TResult Function(Reminder reminder)? reminderUpdated,
-    TResult Function(String id)? reminderDeleted,
+    TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderAdded,
+    TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderUpdated,
+    TResult Function(
+            String id, VoidCallback? onSuccess, void Function(String)? onError)?
+        reminderDeleted,
     required TResult orElse(),
   }) {
     if (reminderAdded != null) {
-      return reminderAdded(reminder);
+      return reminderAdded(reminder, onSuccess, onError);
     }
     return orElse();
   }
@@ -537,9 +629,13 @@ class _$ReminderAddedImpl implements _ReminderAdded {
 }
 
 abstract class _ReminderAdded implements ReminderListEvent {
-  const factory _ReminderAdded(final Reminder reminder) = _$ReminderAddedImpl;
+  const factory _ReminderAdded(final Reminder reminder,
+      {final VoidCallback? onSuccess,
+      final void Function(String)? onError}) = _$ReminderAddedImpl;
 
   Reminder get reminder;
+  VoidCallback? get onSuccess;
+  void Function(String)? get onError;
 
   /// Create a copy of ReminderListEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -554,7 +650,10 @@ abstract class _$$ReminderUpdatedImplCopyWith<$Res> {
           $Res Function(_$ReminderUpdatedImpl) then) =
       __$$ReminderUpdatedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({Reminder reminder});
+  $Res call(
+      {Reminder reminder,
+      VoidCallback? onSuccess,
+      void Function(String)? onError});
 
   $ReminderCopyWith<$Res> get reminder;
 }
@@ -573,12 +672,22 @@ class __$$ReminderUpdatedImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? reminder = null,
+    Object? onSuccess = freezed,
+    Object? onError = freezed,
   }) {
     return _then(_$ReminderUpdatedImpl(
       null == reminder
           ? _value.reminder
           : reminder // ignore: cast_nullable_to_non_nullable
               as Reminder,
+      onSuccess: freezed == onSuccess
+          ? _value.onSuccess
+          : onSuccess // ignore: cast_nullable_to_non_nullable
+              as VoidCallback?,
+      onError: freezed == onError
+          ? _value.onError
+          : onError // ignore: cast_nullable_to_non_nullable
+              as void Function(String)?,
     ));
   }
 
@@ -596,14 +705,18 @@ class __$$ReminderUpdatedImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$ReminderUpdatedImpl implements _ReminderUpdated {
-  const _$ReminderUpdatedImpl(this.reminder);
+  const _$ReminderUpdatedImpl(this.reminder, {this.onSuccess, this.onError});
 
   @override
   final Reminder reminder;
+  @override
+  final VoidCallback? onSuccess;
+  @override
+  final void Function(String)? onError;
 
   @override
   String toString() {
-    return 'ReminderListEvent.reminderUpdated(reminder: $reminder)';
+    return 'ReminderListEvent.reminderUpdated(reminder: $reminder, onSuccess: $onSuccess, onError: $onError)';
   }
 
   @override
@@ -612,11 +725,14 @@ class _$ReminderUpdatedImpl implements _ReminderUpdated {
         (other.runtimeType == runtimeType &&
             other is _$ReminderUpdatedImpl &&
             (identical(other.reminder, reminder) ||
-                other.reminder == reminder));
+                other.reminder == reminder) &&
+            (identical(other.onSuccess, onSuccess) ||
+                other.onSuccess == onSuccess) &&
+            (identical(other.onError, onError) || other.onError == onError));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, reminder);
+  int get hashCode => Object.hash(runtimeType, reminder, onSuccess, onError);
 
   /// Create a copy of ReminderListEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -632,11 +748,17 @@ class _$ReminderUpdatedImpl implements _ReminderUpdated {
   TResult when<TResult extends Object?>({
     required TResult Function() remindersRequested,
     required TResult Function(ReminderFilter filter) filterChanged,
-    required TResult Function(Reminder reminder) reminderAdded,
-    required TResult Function(Reminder reminder) reminderUpdated,
-    required TResult Function(String id) reminderDeleted,
+    required TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)
+        reminderAdded,
+    required TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)
+        reminderUpdated,
+    required TResult Function(
+            String id, VoidCallback? onSuccess, void Function(String)? onError)
+        reminderDeleted,
   }) {
-    return reminderUpdated(reminder);
+    return reminderUpdated(reminder, onSuccess, onError);
   }
 
   @override
@@ -644,11 +766,17 @@ class _$ReminderUpdatedImpl implements _ReminderUpdated {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? remindersRequested,
     TResult? Function(ReminderFilter filter)? filterChanged,
-    TResult? Function(Reminder reminder)? reminderAdded,
-    TResult? Function(Reminder reminder)? reminderUpdated,
-    TResult? Function(String id)? reminderDeleted,
+    TResult? Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderAdded,
+    TResult? Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderUpdated,
+    TResult? Function(
+            String id, VoidCallback? onSuccess, void Function(String)? onError)?
+        reminderDeleted,
   }) {
-    return reminderUpdated?.call(reminder);
+    return reminderUpdated?.call(reminder, onSuccess, onError);
   }
 
   @override
@@ -656,13 +784,19 @@ class _$ReminderUpdatedImpl implements _ReminderUpdated {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? remindersRequested,
     TResult Function(ReminderFilter filter)? filterChanged,
-    TResult Function(Reminder reminder)? reminderAdded,
-    TResult Function(Reminder reminder)? reminderUpdated,
-    TResult Function(String id)? reminderDeleted,
+    TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderAdded,
+    TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderUpdated,
+    TResult Function(
+            String id, VoidCallback? onSuccess, void Function(String)? onError)?
+        reminderDeleted,
     required TResult orElse(),
   }) {
     if (reminderUpdated != null) {
-      return reminderUpdated(reminder);
+      return reminderUpdated(reminder, onSuccess, onError);
     }
     return orElse();
   }
@@ -709,10 +843,13 @@ class _$ReminderUpdatedImpl implements _ReminderUpdated {
 }
 
 abstract class _ReminderUpdated implements ReminderListEvent {
-  const factory _ReminderUpdated(final Reminder reminder) =
-      _$ReminderUpdatedImpl;
+  const factory _ReminderUpdated(final Reminder reminder,
+      {final VoidCallback? onSuccess,
+      final void Function(String)? onError}) = _$ReminderUpdatedImpl;
 
   Reminder get reminder;
+  VoidCallback? get onSuccess;
+  void Function(String)? get onError;
 
   /// Create a copy of ReminderListEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -727,7 +864,8 @@ abstract class _$$ReminderDeletedImplCopyWith<$Res> {
           $Res Function(_$ReminderDeletedImpl) then) =
       __$$ReminderDeletedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String id});
+  $Res call(
+      {String id, VoidCallback? onSuccess, void Function(String)? onError});
 }
 
 /// @nodoc
@@ -744,12 +882,22 @@ class __$$ReminderDeletedImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? onSuccess = freezed,
+    Object? onError = freezed,
   }) {
     return _then(_$ReminderDeletedImpl(
       null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      onSuccess: freezed == onSuccess
+          ? _value.onSuccess
+          : onSuccess // ignore: cast_nullable_to_non_nullable
+              as VoidCallback?,
+      onError: freezed == onError
+          ? _value.onError
+          : onError // ignore: cast_nullable_to_non_nullable
+              as void Function(String)?,
     ));
   }
 }
@@ -757,14 +905,18 @@ class __$$ReminderDeletedImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$ReminderDeletedImpl implements _ReminderDeleted {
-  const _$ReminderDeletedImpl(this.id);
+  const _$ReminderDeletedImpl(this.id, {this.onSuccess, this.onError});
 
   @override
   final String id;
+  @override
+  final VoidCallback? onSuccess;
+  @override
+  final void Function(String)? onError;
 
   @override
   String toString() {
-    return 'ReminderListEvent.reminderDeleted(id: $id)';
+    return 'ReminderListEvent.reminderDeleted(id: $id, onSuccess: $onSuccess, onError: $onError)';
   }
 
   @override
@@ -772,11 +924,14 @@ class _$ReminderDeletedImpl implements _ReminderDeleted {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ReminderDeletedImpl &&
-            (identical(other.id, id) || other.id == id));
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.onSuccess, onSuccess) ||
+                other.onSuccess == onSuccess) &&
+            (identical(other.onError, onError) || other.onError == onError));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id);
+  int get hashCode => Object.hash(runtimeType, id, onSuccess, onError);
 
   /// Create a copy of ReminderListEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -792,11 +947,17 @@ class _$ReminderDeletedImpl implements _ReminderDeleted {
   TResult when<TResult extends Object?>({
     required TResult Function() remindersRequested,
     required TResult Function(ReminderFilter filter) filterChanged,
-    required TResult Function(Reminder reminder) reminderAdded,
-    required TResult Function(Reminder reminder) reminderUpdated,
-    required TResult Function(String id) reminderDeleted,
+    required TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)
+        reminderAdded,
+    required TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)
+        reminderUpdated,
+    required TResult Function(
+            String id, VoidCallback? onSuccess, void Function(String)? onError)
+        reminderDeleted,
   }) {
-    return reminderDeleted(id);
+    return reminderDeleted(id, onSuccess, onError);
   }
 
   @override
@@ -804,11 +965,17 @@ class _$ReminderDeletedImpl implements _ReminderDeleted {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? remindersRequested,
     TResult? Function(ReminderFilter filter)? filterChanged,
-    TResult? Function(Reminder reminder)? reminderAdded,
-    TResult? Function(Reminder reminder)? reminderUpdated,
-    TResult? Function(String id)? reminderDeleted,
+    TResult? Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderAdded,
+    TResult? Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderUpdated,
+    TResult? Function(
+            String id, VoidCallback? onSuccess, void Function(String)? onError)?
+        reminderDeleted,
   }) {
-    return reminderDeleted?.call(id);
+    return reminderDeleted?.call(id, onSuccess, onError);
   }
 
   @override
@@ -816,13 +983,19 @@ class _$ReminderDeletedImpl implements _ReminderDeleted {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? remindersRequested,
     TResult Function(ReminderFilter filter)? filterChanged,
-    TResult Function(Reminder reminder)? reminderAdded,
-    TResult Function(Reminder reminder)? reminderUpdated,
-    TResult Function(String id)? reminderDeleted,
+    TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderAdded,
+    TResult Function(Reminder reminder, VoidCallback? onSuccess,
+            void Function(String)? onError)?
+        reminderUpdated,
+    TResult Function(
+            String id, VoidCallback? onSuccess, void Function(String)? onError)?
+        reminderDeleted,
     required TResult orElse(),
   }) {
     if (reminderDeleted != null) {
-      return reminderDeleted(id);
+      return reminderDeleted(id, onSuccess, onError);
     }
     return orElse();
   }
@@ -869,9 +1042,13 @@ class _$ReminderDeletedImpl implements _ReminderDeleted {
 }
 
 abstract class _ReminderDeleted implements ReminderListEvent {
-  const factory _ReminderDeleted(final String id) = _$ReminderDeletedImpl;
+  const factory _ReminderDeleted(final String id,
+      {final VoidCallback? onSuccess,
+      final void Function(String)? onError}) = _$ReminderDeletedImpl;
 
   String get id;
+  VoidCallback? get onSuccess;
+  void Function(String)? get onError;
 
   /// Create a copy of ReminderListEvent
   /// with the given fields replaced by the non-null parameter values.

@@ -55,6 +55,7 @@ class ReminderTitleField extends StatelessWidget {
           height: 45,
           child: TextFormField(
             initialValue: value,
+            textInputAction: TextInputAction.next,
             style: Theme.of(context).textTheme.bodySmall,
             onChanged: context.read<ReminderFormCubit>().updateTitle,
             decoration: const InputDecoration(
@@ -258,7 +259,15 @@ class _TimeContainer extends StatelessWidget {
       initialTime: TimeOfDay.now(),
     );
     if (picked != null && context.mounted) {
-      context.read<ReminderFormCubit>().addTime(picked.format(context));
+      final now = DateTime.now();
+      final formatted = DateFormat('h:mm a', 'en_US').format(DateTime(
+        now.year,
+        now.month,
+        now.day,
+        picked.hour,
+        picked.minute,
+      ));
+      context.read<ReminderFormCubit>().addTime(formatted);
     }
   }
 }

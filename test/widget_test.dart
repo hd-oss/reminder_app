@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:reminder_app/main.dart';
 import 'package:reminder_app/features/reminders/data/reminder_repository.dart';
 import 'package:reminder_app/features/reminders/models/reminder.dart';
+import 'package:reminder_app/main.dart';
+import 'package:reminder_app/core/notification_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('renders home screen with reminders', (tester) async {
     final repository = _FakeReminderRepository();
+    final notifications = _FakeNotificationService();
 
-    await tester.pumpWidget(ReminderApp(repository: repository));
+    await tester.pumpWidget(
+      ReminderApp(
+        repository: repository,
+        notificationService: notifications,
+      ),
+    );
     await tester.pump();
 
     expect(find.text('Reminders'), findsOneWidget);
@@ -37,4 +44,18 @@ class _FakeReminderRepository extends ReminderRepository {
   Future<void> deleteReminder(String id) async {
     _items.removeWhere((item) => item.id == id);
   }
+}
+
+class _FakeNotificationService implements ReminderNotificationService {
+  @override
+  Future<void> cancelReminder(Reminder reminder) async {}
+
+  @override
+  Future<void> initialize() async {}
+
+  @override
+  Future<void> rescheduleAll(List<Reminder> reminders) async {}
+
+  @override
+  Future<void> scheduleReminder(Reminder reminder) async {}
 }

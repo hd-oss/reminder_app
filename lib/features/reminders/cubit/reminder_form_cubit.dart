@@ -6,6 +6,15 @@ import '../models/reminder.dart';
 
 part 'reminder_form_cubit.freezed.dart';
 
+class ReminderValidationException implements Exception {
+  const ReminderValidationException(this.message);
+
+  final String message;
+
+  @override
+  String toString() => message;
+}
+
 class ReminderFormCubit extends Cubit<ReminderFormState> {
   ReminderFormCubit({Reminder? reminder}) : super(ReminderFormState.initial(reminder: reminder));
 
@@ -57,10 +66,14 @@ class ReminderFormCubit extends Cubit<ReminderFormState> {
   void selectPriority(ReminderPriority priority) => emit(state.copyWith(priority: priority));
 
   Reminder buildReminder() {
+    if (state.times.isEmpty) {
+      throw const ReminderValidationException('Reminder time cannot be empty. Please pick a valid time.');
+    }
     final title = state.title.trim().isEmpty ? 'Untitled Reminder' : state.title.trim();
     final times = state.times.where((time) => time.trim().isNotEmpty).toList();
     final description = state.description.trim().isEmpty ? null : state.description.trim();
-    final reminderTimes = state.locationBased ? <String>[] : (times.isEmpty ? ['9:00 AM'] : times);
+    final reminderTimes = state.locationBased ? <String>[] : times;
+
     return Reminder(
       id: state.editing?.id ?? DateTime.now().microsecondsSinceEpoch.toString(),
       title: title,
@@ -100,7 +113,7 @@ class ReminderFormState with _$ReminderFormState {
       editing: reminder,
       title: reminder?.title ?? '',
       date: reminder?.date ?? DateTime.now(),
-      times: reminder?.times ?? const ['9:00 AM', '10:00 AM', '12:00 PM'],
+      times: reminder?.times ?? const [],
       repeat: reminder?.repeat ?? ReminderRepeat.once,
       category: reminder?.category ?? ReminderCategory.work,
       priority: reminder?.priority ?? ReminderPriority.medium,

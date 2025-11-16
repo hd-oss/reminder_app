@@ -111,20 +111,69 @@ class ReminderFormPage extends StatelessWidget {
   }
 
   void _submitReminder(BuildContext context, bool isEditing) {
-    final reminder = context.read<ReminderFormCubit>().buildReminder();
     final bloc = context.read<ReminderListBloc>();
-    if (isEditing) {
-      bloc.add(ReminderListEvent.reminderUpdated(reminder));
-    } else {
-      bloc.add(ReminderListEvent.reminderAdded(reminder));
+    final navigator = Navigator.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+    final cubit = context.read<ReminderFormCubit>();
+    late final Reminder reminder;
+
+    try {
+      reminder = cubit.buildReminder();
+    } on ReminderValidationException catch (error) {
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(error.message)));
+      return;
     }
-    Navigator.of(context).pop();
+
+    void onSuccess() {
+      if (!navigator.mounted) return;
+      navigator.pop();
+    }
+
+    void onError(String message) {
+      if (!messenger.mounted) return;
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(message)));
+    }
+
+    if (isEditing) {
+      bloc.add(ReminderListEvent.reminderUpdated(
+        reminder,
+        onSuccess: onSuccess,
+        onError: onError,
+      ));
+    } else {
+      bloc.add(ReminderListEvent.reminderAdded(
+        reminder,
+        onSuccess: onSuccess,
+        onError: onError,
+      ));
+    }
   }
 
   void _deleteReminder(BuildContext context, Reminder reminder) {
-    context
-        .read<ReminderListBloc>()
-        .add(ReminderListEvent.reminderDeleted(reminder.id));
-    Navigator.of(context).pop();
+    final bloc = context.read<ReminderListBloc>();
+    final navigator = Navigator.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+
+    void onSuccess() {
+      if (!navigator.mounted) return;
+      navigator.pop();
+    }
+
+    void onError(String message) {
+      if (!messenger.mounted) return;
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(message)));
+    }
+
+    bloc.add(ReminderListEvent.reminderDeleted(
+      reminder.id,
+      onSuccess: onSuccess,
+      onError: onError,
+    ));
   }
 }

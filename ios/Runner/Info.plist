@@ -47,9 +47,19 @@
 	<string>We use your location to notify you when you arrive at saved places.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Allow location access so reminders can trigger when you reach destinations.</string>
+	<key>NSUserNotificationUsageDescription</key>
+	<string>We use notifications to alert you when reminders are due.</string>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+    <array>
+        <string>fetch</string>
+        <string>remote-notification</string>
+        <string>processing</string>
+    </array>
 </dict>
 </plist>

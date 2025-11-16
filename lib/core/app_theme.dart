@@ -40,47 +40,55 @@ ThemeData buildAppTheme() {
       .apply(bodyColor: Colors.black87, displayColor: Colors.black87);
 
   return ThemeData(
-    useMaterial3: true,
-    colorScheme: colorScheme,
-    scaffoldBackgroundColor: AppColors.background,
-    textTheme: textTheme,
-    appBarTheme: AppBarTheme(
-      backgroundColor: AppColors.card,
-      elevation: 0,
-      scrolledUnderElevation: 0,
-      foregroundColor: Colors.black87,
-      titleTextStyle: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
-    ),
-    cardTheme: CardTheme(
-      color: AppColors.card,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      elevation: 0,
-      margin: EdgeInsets.zero,
-    ),
-    inputDecorationTheme: InputDecorationTheme(
-      filled: true,
-      fillColor: AppColors.muted,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.border),
+      useMaterial3: true,
+      colorScheme: colorScheme,
+      scaffoldBackgroundColor: AppColors.background,
+      textTheme: textTheme,
+      appBarTheme: AppBarTheme(
+        backgroundColor: AppColors.card,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        foregroundColor: Colors.black87,
+        titleTextStyle:
+            textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
       ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.border),
+      cardTheme: CardTheme(
+        color: AppColors.card,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        elevation: 0,
+        margin: EdgeInsets.zero,
       ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.primary),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: AppColors.muted,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.border),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.border),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.primary),
+        ),
       ),
-    ),
-    chipTheme: ChipThemeData(
-      backgroundColor: AppColors.muted,
-      selectedColor: AppColors.primary,
-      labelStyle: const TextStyle(fontWeight: FontWeight.w600),
-      secondaryLabelStyle: const TextStyle(color: Colors.white),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
-    ),
-    dividerColor: AppColors.border,
-  );
+      chipTheme: ChipThemeData(
+        backgroundColor: AppColors.muted,
+        selectedColor: AppColors.primary,
+        labelStyle: const TextStyle(fontWeight: FontWeight.w600),
+        secondaryLabelStyle: const TextStyle(color: Colors.white),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
+      ),
+      dividerColor: AppColors.border,
+      timePickerTheme: TimePickerThemeData(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      ),
+      datePickerTheme: DatePickerThemeData(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      ));
 }
