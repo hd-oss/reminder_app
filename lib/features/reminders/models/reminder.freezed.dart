@@ -27,7 +27,7 @@ mixin _$Reminder {
   bool get locationBased => throw _privateConstructorUsedError;
   double? get latitude => throw _privateConstructorUsedError;
   double? get longitude => throw _privateConstructorUsedError;
-  String? get note => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
 
   /// Create a copy of Reminder
   /// with the given fields replaced by the non-null parameter values.
@@ -53,7 +53,7 @@ abstract class $ReminderCopyWith<$Res> {
       bool locationBased,
       double? latitude,
       double? longitude,
-      String? note});
+      String? description});
 }
 
 /// @nodoc
@@ -82,7 +82,7 @@ class _$ReminderCopyWithImpl<$Res, $Val extends Reminder>
     Object? locationBased = null,
     Object? latitude = freezed,
     Object? longitude = freezed,
-    Object? note = freezed,
+    Object? description = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -129,9 +129,9 @@ class _$ReminderCopyWithImpl<$Res, $Val extends Reminder>
           ? _value.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
               as double?,
-      note: freezed == note
-          ? _value.note
-          : note // ignore: cast_nullable_to_non_nullable
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
   }
@@ -157,7 +157,7 @@ abstract class _$$ReminderImplCopyWith<$Res>
       bool locationBased,
       double? latitude,
       double? longitude,
-      String? note});
+      String? description});
 }
 
 /// @nodoc
@@ -184,7 +184,7 @@ class __$$ReminderImplCopyWithImpl<$Res>
     Object? locationBased = null,
     Object? latitude = freezed,
     Object? longitude = freezed,
-    Object? note = freezed,
+    Object? description = freezed,
   }) {
     return _then(_$ReminderImpl(
       id: null == id
@@ -231,9 +231,9 @@ class __$$ReminderImplCopyWithImpl<$Res>
           ? _value.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
               as double?,
-      note: freezed == note
-          ? _value.note
-          : note // ignore: cast_nullable_to_non_nullable
+      description: freezed == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -254,7 +254,7 @@ class _$ReminderImpl implements _Reminder {
       this.locationBased = false,
       this.latitude,
       this.longitude,
-      this.note})
+      this.description})
       : _times = times;
 
   @override
@@ -290,11 +290,11 @@ class _$ReminderImpl implements _Reminder {
   @override
   final double? longitude;
   @override
-  final String? note;
+  final String? description;
 
   @override
   String toString() {
-    return 'Reminder(id: $id, title: $title, date: $date, times: $times, repeat: $repeat, category: $category, priority: $priority, location: $location, locationBased: $locationBased, latitude: $latitude, longitude: $longitude, note: $note)';
+    return 'Reminder(id: $id, title: $title, date: $date, times: $times, repeat: $repeat, category: $category, priority: $priority, location: $location, locationBased: $locationBased, latitude: $latitude, longitude: $longitude, description: $description)';
   }
 
   @override
@@ -319,7 +319,8 @@ class _$ReminderImpl implements _Reminder {
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
                 other.longitude == longitude) &&
-            (identical(other.note, note) || other.note == note));
+            (identical(other.description, description) ||
+                other.description == description));
   }
 
   @override
@@ -336,7 +337,7 @@ class _$ReminderImpl implements _Reminder {
       locationBased,
       latitude,
       longitude,
-      note);
+      description);
 
   /// Create a copy of Reminder
   /// with the given fields replaced by the non-null parameter values.
@@ -360,7 +361,7 @@ abstract class _Reminder implements Reminder {
       final bool locationBased,
       final double? latitude,
       final double? longitude,
-      final String? note}) = _$ReminderImpl;
+      final String? description}) = _$ReminderImpl;
 
   @override
   String get id;
@@ -385,7 +386,7 @@ abstract class _Reminder implements Reminder {
   @override
   double? get longitude;
   @override
-  String? get note;
+  String? get description;
 
   /// Create a copy of Reminder
   /// with the given fields replaced by the non-null parameter values.

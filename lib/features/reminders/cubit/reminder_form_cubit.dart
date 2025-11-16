@@ -11,6 +11,8 @@ class ReminderFormCubit extends Cubit<ReminderFormState> {
 
   void updateTitle(String value) => emit(state.copyWith(title: value));
 
+  void updateDescription(String value) => emit(state.copyWith(description: value));
+
   void updateDate(DateTime value) => emit(state.copyWith(date: value));
 
   void addTime(String label) {
@@ -57,11 +59,13 @@ class ReminderFormCubit extends Cubit<ReminderFormState> {
   Reminder buildReminder() {
     final title = state.title.trim().isEmpty ? 'Untitled Reminder' : state.title.trim();
     final times = state.times.where((time) => time.trim().isNotEmpty).toList();
+    final description = state.description.trim().isEmpty ? null : state.description.trim();
+    final reminderTimes = state.locationBased ? <String>[] : (times.isEmpty ? ['9:00 AM'] : times);
     return Reminder(
       id: state.editing?.id ?? DateTime.now().microsecondsSinceEpoch.toString(),
       title: title,
       date: DateUtils.dateOnly(state.date),
-      times: times.isEmpty ? ['9:00 AM'] : times,
+      times: reminderTimes,
       repeat: state.repeat,
       category: state.category,
       priority: state.priority,
@@ -69,6 +73,7 @@ class ReminderFormCubit extends Cubit<ReminderFormState> {
       location: state.locationBased ? (state.location.trim().isEmpty ? null : state.location.trim()) : null,
       latitude: state.locationBased ? state.latitude : null,
       longitude: state.locationBased ? state.longitude : null,
+      description: description,
     );
   }
 }
@@ -85,6 +90,7 @@ class ReminderFormState with _$ReminderFormState {
     required ReminderPriority priority,
     required bool locationBased,
     required String location,
+    required String description,
     double? latitude,
     double? longitude,
   }) = _ReminderFormState;
@@ -100,6 +106,7 @@ class ReminderFormState with _$ReminderFormState {
       priority: reminder?.priority ?? ReminderPriority.medium,
       locationBased: reminder?.locationBased ?? false,
       location: reminder?.location ?? '',
+      description: reminder?.description ?? '',
       latitude: reminder?.latitude,
       longitude: reminder?.longitude,
     );

@@ -43,6 +43,8 @@ dependencies:
   bloc: ^8.1.4
   geocoding: ^3.0.0
   geolocator: ^13.0.2
+  sqflite: ^2.3.3
+  path: ^1.9.0
 
 dev_dependencies:
   flutter_test:

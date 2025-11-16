@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/app_theme.dart';
@@ -9,8 +10,56 @@ import '../models/reminder.dart';
 import '../widgets/reminder_card.dart';
 import 'reminder_form_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkLocationPermission());
+  }
+
+  Future<void> _checkLocationPermission() async {
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      final hasService = await Geolocator.isLocationServiceEnabled();
+      if (!hasService) {
+        if (!mounted) return;
+        messenger
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            const SnackBar(content: Text('Location services are disabled. Enable them to use location reminders.')),
+          );
+        return;
+      }
+
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+
+      if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+        if (!mounted) return;
+        messenger
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            const SnackBar(content: Text('Location permission is needed for location-based reminders.')),
+          );
+      }
+    } catch (_) {
+      if (!mounted) return;
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(content: Text('Unable to check location permission.')),
+        );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +67,24 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: Column(children: [
-          Padding(
-              padding: const EdgeInsets.all(16),
-              child: _Header(dateText: dateText)),
-          const Expanded(child: _RemindersList()),
-        ]),
+      body: BlocListener<ReminderListBloc, ReminderListState>(
+        listenWhen: (previous, current) => previous.error != current.error,
+        listener: (context, state) {
+          final message = state.error;
+          if (message != null) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(SnackBar(content: Text(message)));
+          }
+        },
+        child: SafeArea(
+          child: Column(children: [
+            Padding(
+                padding: const EdgeInsets.all(16),
+                child: _Header(dateText: dateText)),
+            const Expanded(child: _RemindersList()),
+          ]),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
           heroTag: 'add_reminder_fab',
@@ -161,20 +221,33 @@ class _RemindersList extends StatelessWidget {
     return BlocBuilder<ReminderListBloc, ReminderListState>(
       builder: (context, state) {
         final reminders = state.filteredReminders;
+        if (state.isLoading && state.reminders.isEmpty) {
+          return const _LoadingState();
+        }
+        if (state.error != null && reminders.isEmpty) {
+          return _ErrorState(message: state.error!);
+        }
         if (reminders.isEmpty) return _EmptyState();
 
-        return ListView.separated(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 120),
-          itemBuilder: (context, index) => ReminderCard(
-            reminder: reminders[index],
-            onMenuTap: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (_) => BlocProvider(
-                  create: (_) => ReminderFormCubit(reminder: reminders[index]),
-                  child: const ReminderFormPage()),
-            )),
+        return RefreshIndicator(
+          color: AppColors.primary,
+          onRefresh: () async {
+            context.read<ReminderListBloc>().add(const ReminderListEvent.remindersRequested());
+          },
+          child: ListView.separated(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 120),
+            physics: const AlwaysScrollableScrollPhysics(),
+            itemBuilder: (context, index) => ReminderCard(
+              reminder: reminders[index],
+              onMenuTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => BlocProvider(
+                    create: (_) => ReminderFormCubit(reminder: reminders[index]),
+                    child: const ReminderFormPage()),
+              )),
+            ),
+            separatorBuilder: (_, __) => const SizedBox(height: 8),
+            itemCount: reminders.length,
           ),
-          separatorBuilder: (_, __) => const SizedBox(height: 8),
-          itemCount: reminders.length,
         );
       },
     );
@@ -198,6 +271,52 @@ class _EmptyState extends StatelessWidget {
                   .textTheme
                   .bodySmall
                   ?.copyWith(color: AppColors.mutedForeground)),
+        ],
+      ),
+    );
+  }
+}
+
+class _LoadingState extends StatelessWidget {
+  const _LoadingState();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+      ),
+    );
+  }
+}
+
+class _ErrorState extends StatelessWidget {
+  const _ErrorState({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.error_outline_rounded,
+              size: 48, color: AppColors.destructive),
+          const SizedBox(height: 12),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Pull to refresh or try again later.',
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: AppColors.mutedForeground),
+          ),
         ],
       ),
     );

@@ -68,6 +68,124 @@ class ReminderTitleField extends StatelessWidget {
   }
 }
 
+class ReminderDescriptionField extends StatelessWidget {
+  const ReminderDescriptionField({super.key, required this.value});
+
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      const FormSectionLabel(
+        icon: Icons.notes_rounded,
+        label: 'Description',
+      ),
+      const SizedBox(height: 8),
+      TextFormField(
+          initialValue: value,
+          maxLines: 4,
+          minLines: 3,
+          style: Theme.of(context).textTheme.bodySmall,
+          onChanged: context.read<ReminderFormCubit>().updateDescription,
+          decoration: const InputDecoration(
+            hintText: 'Add any extra context or notes',
+          )),
+    ]);
+  }
+}
+
+class ReminderTypeSelector extends StatelessWidget {
+  const ReminderTypeSelector({super.key, required this.isLocationReminder});
+
+  final bool isLocationReminder;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const FormSectionLabel(
+          icon: Icons.notifications_active_rounded,
+          label: 'Reminder Type',
+        ),
+        const SizedBox(height: 12),
+        Row(children: [
+          _TypeOptionCard(
+              icon: Icons.alarm_rounded,
+              title: 'Date & Time',
+              subtitle: 'Trigger at specific time',
+              selected: !isLocationReminder,
+              onTap: () {
+                context.read<ReminderFormCubit>().toggleLocation(false);
+              }),
+          const SizedBox(width: 12),
+          _TypeOptionCard(
+              icon: Icons.place_rounded,
+              title: 'Location',
+              subtitle: 'Trigger when arriving',
+              selected: isLocationReminder,
+              onTap: () {
+                context.read<ReminderFormCubit>().toggleLocation(true);
+              }),
+        ]),
+      ],
+    );
+  }
+}
+
+class _TypeOptionCard extends StatelessWidget {
+  const _TypeOptionCard({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = selected ? AppColors.primary : AppColors.mutedForeground;
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            color: selected ? AppColors.secondary : AppColors.card,
+            border: Border.all(
+              color: selected ? AppColors.primary : AppColors.border,
+            )),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, color: color),
+            const SizedBox(height: 4),
+            Text(title,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleSmall
+                    ?.copyWith(fontWeight: FontWeight.w600, color: color)),
+            const SizedBox(height: 4),
+            Text(subtitle,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: AppColors.mutedForeground)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class ReminderTimeSection extends StatelessWidget {
   const ReminderTimeSection({super.key, required this.times});
 
@@ -100,10 +218,9 @@ class _TimeContainer extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
-        color: AppColors.card,
-      ),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.border),
+          color: AppColors.card),
       child: Column(
         children: [
           ...List.generate(times.length, (index) {
@@ -111,10 +228,10 @@ class _TimeContainer extends StatelessWidget {
               padding:
                   EdgeInsets.only(bottom: index == (times.length - 1) ? 0 : 12),
               child: _TimeRow(
-                label: times[index],
-                onRemove: () =>
-                    context.read<ReminderFormCubit>().removeTimeAt(index),
-              ),
+                  label: times[index],
+                  onRemove: () {
+                    context.read<ReminderFormCubit>().removeTimeAt(index);
+                  }),
             );
           }),
           const SizedBox(height: 4),
@@ -160,9 +277,8 @@ class _TimeRow extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 14),
             decoration: BoxDecoration(
-              color: AppColors.secondary,
-              borderRadius: BorderRadius.circular(12),
-            ),
+                color: AppColors.secondary,
+                borderRadius: BorderRadius.circular(12)),
             child: Text(label,
                 textAlign: TextAlign.center,
                 style: Theme.of(context)

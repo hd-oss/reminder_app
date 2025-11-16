@@ -7,6 +7,8 @@ class ReminderListState with _$ReminderListState {
   const factory ReminderListState({
     required List<Reminder> reminders,
     required ReminderFilter filter,
+    @Default(false) bool isLoading,
+    String? error,
   }) = _ReminderListState;
 
   List<Reminder> get filteredReminders {

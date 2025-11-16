@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$ReminderListEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function() remindersRequested,
     required TResult Function(ReminderFilter filter) filterChanged,
     required TResult Function(Reminder reminder) reminderAdded,
     required TResult Function(Reminder reminder) reminderUpdated,
@@ -26,6 +27,7 @@ mixin _$ReminderListEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? remindersRequested,
     TResult? Function(ReminderFilter filter)? filterChanged,
     TResult? Function(Reminder reminder)? reminderAdded,
     TResult? Function(Reminder reminder)? reminderUpdated,
@@ -34,6 +36,7 @@ mixin _$ReminderListEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? remindersRequested,
     TResult Function(ReminderFilter filter)? filterChanged,
     TResult Function(Reminder reminder)? reminderAdded,
     TResult Function(Reminder reminder)? reminderUpdated,
@@ -43,6 +46,7 @@ mixin _$ReminderListEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_RemindersRequested value) remindersRequested,
     required TResult Function(_FilterChanged value) filterChanged,
     required TResult Function(_ReminderAdded value) reminderAdded,
     required TResult Function(_ReminderUpdated value) reminderUpdated,
@@ -51,6 +55,7 @@ mixin _$ReminderListEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_RemindersRequested value)? remindersRequested,
     TResult? Function(_FilterChanged value)? filterChanged,
     TResult? Function(_ReminderAdded value)? reminderAdded,
     TResult? Function(_ReminderUpdated value)? reminderUpdated,
@@ -59,6 +64,7 @@ mixin _$ReminderListEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_RemindersRequested value)? remindersRequested,
     TResult Function(_FilterChanged value)? filterChanged,
     TResult Function(_ReminderAdded value)? reminderAdded,
     TResult Function(_ReminderUpdated value)? reminderUpdated,
@@ -87,6 +93,129 @@ class _$ReminderListEventCopyWithImpl<$Res, $Val extends ReminderListEvent>
 
   /// Create a copy of ReminderListEvent
   /// with the given fields replaced by the non-null parameter values.
+}
+
+/// @nodoc
+abstract class _$$RemindersRequestedImplCopyWith<$Res> {
+  factory _$$RemindersRequestedImplCopyWith(_$RemindersRequestedImpl value,
+          $Res Function(_$RemindersRequestedImpl) then) =
+      __$$RemindersRequestedImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$RemindersRequestedImplCopyWithImpl<$Res>
+    extends _$ReminderListEventCopyWithImpl<$Res, _$RemindersRequestedImpl>
+    implements _$$RemindersRequestedImplCopyWith<$Res> {
+  __$$RemindersRequestedImplCopyWithImpl(_$RemindersRequestedImpl _value,
+      $Res Function(_$RemindersRequestedImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of ReminderListEvent
+  /// with the given fields replaced by the non-null parameter values.
+}
+
+/// @nodoc
+
+class _$RemindersRequestedImpl implements _RemindersRequested {
+  const _$RemindersRequestedImpl();
+
+  @override
+  String toString() {
+    return 'ReminderListEvent.remindersRequested()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$RemindersRequestedImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() remindersRequested,
+    required TResult Function(ReminderFilter filter) filterChanged,
+    required TResult Function(Reminder reminder) reminderAdded,
+    required TResult Function(Reminder reminder) reminderUpdated,
+    required TResult Function(String id) reminderDeleted,
+  }) {
+    return remindersRequested();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? remindersRequested,
+    TResult? Function(ReminderFilter filter)? filterChanged,
+    TResult? Function(Reminder reminder)? reminderAdded,
+    TResult? Function(Reminder reminder)? reminderUpdated,
+    TResult? Function(String id)? reminderDeleted,
+  }) {
+    return remindersRequested?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? remindersRequested,
+    TResult Function(ReminderFilter filter)? filterChanged,
+    TResult Function(Reminder reminder)? reminderAdded,
+    TResult Function(Reminder reminder)? reminderUpdated,
+    TResult Function(String id)? reminderDeleted,
+    required TResult orElse(),
+  }) {
+    if (remindersRequested != null) {
+      return remindersRequested();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_RemindersRequested value) remindersRequested,
+    required TResult Function(_FilterChanged value) filterChanged,
+    required TResult Function(_ReminderAdded value) reminderAdded,
+    required TResult Function(_ReminderUpdated value) reminderUpdated,
+    required TResult Function(_ReminderDeleted value) reminderDeleted,
+  }) {
+    return remindersRequested(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_RemindersRequested value)? remindersRequested,
+    TResult? Function(_FilterChanged value)? filterChanged,
+    TResult? Function(_ReminderAdded value)? reminderAdded,
+    TResult? Function(_ReminderUpdated value)? reminderUpdated,
+    TResult? Function(_ReminderDeleted value)? reminderDeleted,
+  }) {
+    return remindersRequested?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_RemindersRequested value)? remindersRequested,
+    TResult Function(_FilterChanged value)? filterChanged,
+    TResult Function(_ReminderAdded value)? reminderAdded,
+    TResult Function(_ReminderUpdated value)? reminderUpdated,
+    TResult Function(_ReminderDeleted value)? reminderDeleted,
+    required TResult orElse(),
+  }) {
+    if (remindersRequested != null) {
+      return remindersRequested(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _RemindersRequested implements ReminderListEvent {
+  const factory _RemindersRequested() = _$RemindersRequestedImpl;
 }
 
 /// @nodoc
@@ -157,6 +286,7 @@ class _$FilterChangedImpl implements _FilterChanged {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function() remindersRequested,
     required TResult Function(ReminderFilter filter) filterChanged,
     required TResult Function(Reminder reminder) reminderAdded,
     required TResult Function(Reminder reminder) reminderUpdated,
@@ -168,6 +298,7 @@ class _$FilterChangedImpl implements _FilterChanged {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? remindersRequested,
     TResult? Function(ReminderFilter filter)? filterChanged,
     TResult? Function(Reminder reminder)? reminderAdded,
     TResult? Function(Reminder reminder)? reminderUpdated,
@@ -179,6 +310,7 @@ class _$FilterChangedImpl implements _FilterChanged {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? remindersRequested,
     TResult Function(ReminderFilter filter)? filterChanged,
     TResult Function(Reminder reminder)? reminderAdded,
     TResult Function(Reminder reminder)? reminderUpdated,
@@ -194,6 +326,7 @@ class _$FilterChangedImpl implements _FilterChanged {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_RemindersRequested value) remindersRequested,
     required TResult Function(_FilterChanged value) filterChanged,
     required TResult Function(_ReminderAdded value) reminderAdded,
     required TResult Function(_ReminderUpdated value) reminderUpdated,
@@ -205,6 +338,7 @@ class _$FilterChangedImpl implements _FilterChanged {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_RemindersRequested value)? remindersRequested,
     TResult? Function(_FilterChanged value)? filterChanged,
     TResult? Function(_ReminderAdded value)? reminderAdded,
     TResult? Function(_ReminderUpdated value)? reminderUpdated,
@@ -216,6 +350,7 @@ class _$FilterChangedImpl implements _FilterChanged {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_RemindersRequested value)? remindersRequested,
     TResult Function(_FilterChanged value)? filterChanged,
     TResult Function(_ReminderAdded value)? reminderAdded,
     TResult Function(_ReminderUpdated value)? reminderUpdated,
@@ -323,6 +458,7 @@ class _$ReminderAddedImpl implements _ReminderAdded {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function() remindersRequested,
     required TResult Function(ReminderFilter filter) filterChanged,
     required TResult Function(Reminder reminder) reminderAdded,
     required TResult Function(Reminder reminder) reminderUpdated,
@@ -334,6 +470,7 @@ class _$ReminderAddedImpl implements _ReminderAdded {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? remindersRequested,
     TResult? Function(ReminderFilter filter)? filterChanged,
     TResult? Function(Reminder reminder)? reminderAdded,
     TResult? Function(Reminder reminder)? reminderUpdated,
@@ -345,6 +482,7 @@ class _$ReminderAddedImpl implements _ReminderAdded {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? remindersRequested,
     TResult Function(ReminderFilter filter)? filterChanged,
     TResult Function(Reminder reminder)? reminderAdded,
     TResult Function(Reminder reminder)? reminderUpdated,
@@ -360,6 +498,7 @@ class _$ReminderAddedImpl implements _ReminderAdded {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_RemindersRequested value) remindersRequested,
     required TResult Function(_FilterChanged value) filterChanged,
     required TResult Function(_ReminderAdded value) reminderAdded,
     required TResult Function(_ReminderUpdated value) reminderUpdated,
@@ -371,6 +510,7 @@ class _$ReminderAddedImpl implements _ReminderAdded {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_RemindersRequested value)? remindersRequested,
     TResult? Function(_FilterChanged value)? filterChanged,
     TResult? Function(_ReminderAdded value)? reminderAdded,
     TResult? Function(_ReminderUpdated value)? reminderUpdated,
@@ -382,6 +522,7 @@ class _$ReminderAddedImpl implements _ReminderAdded {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_RemindersRequested value)? remindersRequested,
     TResult Function(_FilterChanged value)? filterChanged,
     TResult Function(_ReminderAdded value)? reminderAdded,
     TResult Function(_ReminderUpdated value)? reminderUpdated,
@@ -489,6 +630,7 @@ class _$ReminderUpdatedImpl implements _ReminderUpdated {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function() remindersRequested,
     required TResult Function(ReminderFilter filter) filterChanged,
     required TResult Function(Reminder reminder) reminderAdded,
     required TResult Function(Reminder reminder) reminderUpdated,
@@ -500,6 +642,7 @@ class _$ReminderUpdatedImpl implements _ReminderUpdated {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? remindersRequested,
     TResult? Function(ReminderFilter filter)? filterChanged,
     TResult? Function(Reminder reminder)? reminderAdded,
     TResult? Function(Reminder reminder)? reminderUpdated,
@@ -511,6 +654,7 @@ class _$ReminderUpdatedImpl implements _ReminderUpdated {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? remindersRequested,
     TResult Function(ReminderFilter filter)? filterChanged,
     TResult Function(Reminder reminder)? reminderAdded,
     TResult Function(Reminder reminder)? reminderUpdated,
@@ -526,6 +670,7 @@ class _$ReminderUpdatedImpl implements _ReminderUpdated {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_RemindersRequested value) remindersRequested,
     required TResult Function(_FilterChanged value) filterChanged,
     required TResult Function(_ReminderAdded value) reminderAdded,
     required TResult Function(_ReminderUpdated value) reminderUpdated,
@@ -537,6 +682,7 @@ class _$ReminderUpdatedImpl implements _ReminderUpdated {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_RemindersRequested value)? remindersRequested,
     TResult? Function(_FilterChanged value)? filterChanged,
     TResult? Function(_ReminderAdded value)? reminderAdded,
     TResult? Function(_ReminderUpdated value)? reminderUpdated,
@@ -548,6 +694,7 @@ class _$ReminderUpdatedImpl implements _ReminderUpdated {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_RemindersRequested value)? remindersRequested,
     TResult Function(_FilterChanged value)? filterChanged,
     TResult Function(_ReminderAdded value)? reminderAdded,
     TResult Function(_ReminderUpdated value)? reminderUpdated,
@@ -643,6 +790,7 @@ class _$ReminderDeletedImpl implements _ReminderDeleted {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
+    required TResult Function() remindersRequested,
     required TResult Function(ReminderFilter filter) filterChanged,
     required TResult Function(Reminder reminder) reminderAdded,
     required TResult Function(Reminder reminder) reminderUpdated,
@@ -654,6 +802,7 @@ class _$ReminderDeletedImpl implements _ReminderDeleted {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? remindersRequested,
     TResult? Function(ReminderFilter filter)? filterChanged,
     TResult? Function(Reminder reminder)? reminderAdded,
     TResult? Function(Reminder reminder)? reminderUpdated,
@@ -665,6 +814,7 @@ class _$ReminderDeletedImpl implements _ReminderDeleted {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? remindersRequested,
     TResult Function(ReminderFilter filter)? filterChanged,
     TResult Function(Reminder reminder)? reminderAdded,
     TResult Function(Reminder reminder)? reminderUpdated,
@@ -680,6 +830,7 @@ class _$ReminderDeletedImpl implements _ReminderDeleted {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
+    required TResult Function(_RemindersRequested value) remindersRequested,
     required TResult Function(_FilterChanged value) filterChanged,
     required TResult Function(_ReminderAdded value) reminderAdded,
     required TResult Function(_ReminderUpdated value) reminderUpdated,
@@ -691,6 +842,7 @@ class _$ReminderDeletedImpl implements _ReminderDeleted {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_RemindersRequested value)? remindersRequested,
     TResult? Function(_FilterChanged value)? filterChanged,
     TResult? Function(_ReminderAdded value)? reminderAdded,
     TResult? Function(_ReminderUpdated value)? reminderUpdated,
@@ -702,6 +854,7 @@ class _$ReminderDeletedImpl implements _ReminderDeleted {
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
+    TResult Function(_RemindersRequested value)? remindersRequested,
     TResult Function(_FilterChanged value)? filterChanged,
     TResult Function(_ReminderAdded value)? reminderAdded,
     TResult Function(_ReminderUpdated value)? reminderUpdated,
@@ -731,6 +884,8 @@ abstract class _ReminderDeleted implements ReminderListEvent {
 mixin _$ReminderListState {
   List<Reminder> get reminders => throw _privateConstructorUsedError;
   ReminderFilter get filter => throw _privateConstructorUsedError;
+  bool get isLoading => throw _privateConstructorUsedError;
+  String? get error => throw _privateConstructorUsedError;
 
   /// Create a copy of ReminderListState
   /// with the given fields replaced by the non-null parameter values.
@@ -745,7 +900,11 @@ abstract class $ReminderListStateCopyWith<$Res> {
           ReminderListState value, $Res Function(ReminderListState) then) =
       _$ReminderListStateCopyWithImpl<$Res, ReminderListState>;
   @useResult
-  $Res call({List<Reminder> reminders, ReminderFilter filter});
+  $Res call(
+      {List<Reminder> reminders,
+      ReminderFilter filter,
+      bool isLoading,
+      String? error});
 }
 
 /// @nodoc
@@ -765,6 +924,8 @@ class _$ReminderListStateCopyWithImpl<$Res, $Val extends ReminderListState>
   $Res call({
     Object? reminders = null,
     Object? filter = null,
+    Object? isLoading = null,
+    Object? error = freezed,
   }) {
     return _then(_value.copyWith(
       reminders: null == reminders
@@ -775,6 +936,14 @@ class _$ReminderListStateCopyWithImpl<$Res, $Val extends ReminderListState>
           ? _value.filter
           : filter // ignore: cast_nullable_to_non_nullable
               as ReminderFilter,
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      error: freezed == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -787,7 +956,11 @@ abstract class _$$ReminderListStateImplCopyWith<$Res>
       __$$ReminderListStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<Reminder> reminders, ReminderFilter filter});
+  $Res call(
+      {List<Reminder> reminders,
+      ReminderFilter filter,
+      bool isLoading,
+      String? error});
 }
 
 /// @nodoc
@@ -805,6 +978,8 @@ class __$$ReminderListStateImplCopyWithImpl<$Res>
   $Res call({
     Object? reminders = null,
     Object? filter = null,
+    Object? isLoading = null,
+    Object? error = freezed,
   }) {
     return _then(_$ReminderListStateImpl(
       reminders: null == reminders
@@ -815,6 +990,14 @@ class __$$ReminderListStateImplCopyWithImpl<$Res>
           ? _value.filter
           : filter // ignore: cast_nullable_to_non_nullable
               as ReminderFilter,
+      isLoading: null == isLoading
+          ? _value.isLoading
+          : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      error: freezed == error
+          ? _value.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -823,7 +1006,10 @@ class __$$ReminderListStateImplCopyWithImpl<$Res>
 
 class _$ReminderListStateImpl extends _ReminderListState {
   const _$ReminderListStateImpl(
-      {required final List<Reminder> reminders, required this.filter})
+      {required final List<Reminder> reminders,
+      required this.filter,
+      this.isLoading = false,
+      this.error})
       : _reminders = reminders,
         super._();
 
@@ -837,10 +1023,15 @@ class _$ReminderListStateImpl extends _ReminderListState {
 
   @override
   final ReminderFilter filter;
+  @override
+  @JsonKey()
+  final bool isLoading;
+  @override
+  final String? error;
 
   @override
   String toString() {
-    return 'ReminderListState(reminders: $reminders, filter: $filter)';
+    return 'ReminderListState(reminders: $reminders, filter: $filter, isLoading: $isLoading, error: $error)';
   }
 
   @override
@@ -850,12 +1041,19 @@ class _$ReminderListStateImpl extends _ReminderListState {
             other is _$ReminderListStateImpl &&
             const DeepCollectionEquality()
                 .equals(other._reminders, _reminders) &&
-            (identical(other.filter, filter) || other.filter == filter));
+            (identical(other.filter, filter) || other.filter == filter) &&
+            (identical(other.isLoading, isLoading) ||
+                other.isLoading == isLoading) &&
+            (identical(other.error, error) || other.error == error));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_reminders), filter);
+      runtimeType,
+      const DeepCollectionEquality().hash(_reminders),
+      filter,
+      isLoading,
+      error);
 
   /// Create a copy of ReminderListState
   /// with the given fields replaced by the non-null parameter values.
@@ -870,13 +1068,19 @@ class _$ReminderListStateImpl extends _ReminderListState {
 abstract class _ReminderListState extends ReminderListState {
   const factory _ReminderListState(
       {required final List<Reminder> reminders,
-      required final ReminderFilter filter}) = _$ReminderListStateImpl;
+      required final ReminderFilter filter,
+      final bool isLoading,
+      final String? error}) = _$ReminderListStateImpl;
   const _ReminderListState._() : super._();
 
   @override
   List<Reminder> get reminders;
   @override
   ReminderFilter get filter;
+  @override
+  bool get isLoading;
+  @override
+  String? get error;
 
   /// Create a copy of ReminderListState
   /// with the given fields replaced by the non-null parameter values.

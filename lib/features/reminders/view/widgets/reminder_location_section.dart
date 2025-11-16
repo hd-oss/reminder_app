@@ -14,12 +14,10 @@ const latlng.LatLng _defaultCenter =
 class ReminderLocationSection extends StatelessWidget {
   const ReminderLocationSection({
     super.key,
-    required this.enabled,
     this.latitude,
     this.longitude,
   });
 
-  final bool enabled;
   final double? latitude;
   final double? longitude;
 
@@ -33,31 +31,20 @@ class ReminderLocationSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const FormSectionLabel(
-              icon: Icons.location_on_rounded,
-              label: 'Location-based Reminder',
-            ),
-            Switch.adaptive(
-              value: enabled,
-              onChanged: formCubit.toggleLocation,
-              activeColor: AppColors.primary,
-            ),
-          ],
+        const FormSectionLabel(
+          icon: Icons.location_on_rounded,
+          label: 'Location Reminder',
         ),
-        if (enabled)
-          BlocProvider(
-            create: (_) => ReminderLocationCubit(
-              formCubit,
-              initialAddress: initialLabel,
-            )..bootstrap(latitude: latitude, longitude: longitude),
-            child: _LocationInputSection(
-              latitude: latitude,
-              longitude: longitude,
-            ),
+        BlocProvider(
+          create: (_) => ReminderLocationCubit(
+            formCubit,
+            initialAddress: initialLabel,
+          )..bootstrap(latitude: latitude, longitude: longitude),
+          child: _LocationInputSection(
+            latitude: latitude,
+            longitude: longitude,
           ),
+        ),
       ],
     );
   }
@@ -132,10 +119,9 @@ class _LocationInputSectionState extends State<_LocationInputSection> {
         margin: const EdgeInsets.only(top: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: AppColors.border),
-          color: AppColors.card,
-        ),
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: AppColors.border),
+            color: AppColors.card),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -159,7 +145,7 @@ class _LocationInputSectionState extends State<_LocationInputSection> {
                 return _PlaceInfoDetails(info: state.placeInfo!);
               },
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             locationReminderHint(),
           ],
         ),
@@ -186,7 +172,7 @@ class _LocationMap extends StatelessWidget {
     return Container(
       height: 300,
       clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
       child: Stack(children: [
         FlutterMap(
             mapController: mapController,
@@ -227,8 +213,14 @@ class _LocationMap extends StatelessWidget {
                   onPressed: state.isLocating
                       ? null
                       : () => context
-                          .read<ReminderLocationCubit>()
-                          .useCurrentLocation(),
+                              .read<ReminderLocationCubit>()
+                              .useCurrentLocation()
+                              .then((value) {
+                            if (value == null) return null;
+                            return mapController.move(
+                                latlng.LatLng(value.latitude, value.longitude),
+                                15);
+                          }),
                 )),
       ]),
     );
@@ -280,10 +272,10 @@ class _PlaceInfoDetails extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: AppColors.muted,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

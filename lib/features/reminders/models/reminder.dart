@@ -16,7 +16,7 @@ class Reminder with _$Reminder {
     @Default(false) bool locationBased,
     double? latitude,
     double? longitude,
-    String? note,
+    String? description,
   }) = _Reminder;
 }
 

@@ -40,7 +40,15 @@ class ReminderCard extends StatelessWidget {
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     )),
-                if (reminder.times.isNotEmpty) ...[
+                if ((reminder.description ?? '').trim().isNotEmpty) ...[
+                  const SizedBox(height: 6),
+                  Text(reminder.description!.trim(),
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: Colors.black87,
+                      )),
+                ],
+                if (!reminder.locationBased && reminder.times.isNotEmpty) ...[
                   const SizedBox(height: 8),
                   Row(children: [
                     const Icon(Icons.access_time_filled_rounded,
@@ -54,7 +62,7 @@ class ReminderCard extends StatelessWidget {
                     ),
                   ]),
                 ],
-                if ((reminder.location ?? '').isNotEmpty) ...[
+                if (reminder.locationBased && (reminder.location ?? '').isNotEmpty) ...[
                   const SizedBox(height: 8),
                   Row(children: [
                     const Icon(Icons.place_rounded,
@@ -86,12 +94,6 @@ class ReminderCard extends StatelessWidget {
                     if (reminder.locationBased)
                       const _Pill(
                         label: 'Location-based',
-                        backgroundColor: AppColors.muted,
-                        foregroundColor: AppColors.mutedForeground,
-                      ),
-                    if (reminder.note != null && reminder.note!.isNotEmpty)
-                      _Pill(
-                        label: reminder.note!,
                         backgroundColor: AppColors.muted,
                         foregroundColor: AppColors.mutedForeground,
                       ),

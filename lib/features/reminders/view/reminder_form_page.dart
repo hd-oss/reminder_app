@@ -37,17 +37,25 @@ class ReminderFormPage extends StatelessWidget {
                 children: [
                   ReminderTitleField(value: state.title),
                   const SizedBox(height: 20),
-                  ReminderTimeSection(times: state.times),
+                  ReminderDescriptionField(value: state.description),
                   const SizedBox(height: 20),
-                  ReminderDateSection(date: state.date),
+                  ReminderTypeSelector(isLocationReminder: state.locationBased),
                   const SizedBox(height: 20),
-                  ReminderRepeatSection(selected: state.repeat),
-                  const SizedBox(height: 20),
-                  ReminderLocationSection(
-                      enabled: state.locationBased,
+                  if (!state.locationBased) ...[
+                    ReminderTimeSection(times: state.times),
+                    const SizedBox(height: 20),
+                    ReminderDateSection(date: state.date),
+                    const SizedBox(height: 20),
+                    ReminderRepeatSection(selected: state.repeat),
+                    const SizedBox(height: 20),
+                  ],
+                  if (state.locationBased) ...[
+                    ReminderLocationSection(
                       latitude: state.latitude,
-                      longitude: state.longitude),
-                  const SizedBox(height: 20),
+                      longitude: state.longitude,
+                    ),
+                    const SizedBox(height: 20),
+                  ],
                   ReminderCategorySection(selected: state.category),
                   const SizedBox(height: 20),
                   ReminderPrioritySection(selected: state.priority),

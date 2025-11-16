@@ -38,6 +38,68 @@ class ReminderLocationState {
   }
 }
 
+class ResolvedPlaceInfo {
+  const ResolvedPlaceInfo(
+      {this.name,
+      this.street,
+      this.subLocality,
+      this.locality,
+      this.administrativeArea,
+      this.country,
+      this.postalCode});
+
+  factory ResolvedPlaceInfo.fromPlacemark(Placemark placemark) {
+    String? clean(String? value) {
+      final trimmed = value?.trim();
+      if (trimmed == null || trimmed.isEmpty) return null;
+      return trimmed;
+    }
+
+    return ResolvedPlaceInfo(
+        name: clean(placemark.name),
+        street: clean(placemark.street),
+        subLocality: clean(placemark.subLocality),
+        locality: clean(placemark.locality),
+        administrativeArea: clean(placemark.administrativeArea),
+        country: clean(placemark.country),
+        postalCode: clean(placemark.postalCode));
+  }
+
+  final String? name;
+  final String? street;
+  final String? subLocality;
+  final String? locality;
+  final String? administrativeArea;
+  final String? country;
+  final String? postalCode;
+
+  String? get title =>
+      name ??
+      street ??
+      subLocality ??
+      locality ??
+      administrativeArea ??
+      country;
+
+  List<String> get detailLines {
+    final details = <String>[];
+    final currentTitle = title;
+    for (final value in [
+      street,
+      subLocality,
+      locality,
+      administrativeArea,
+      country,
+    ]) {
+      final trimmed = value?.trim();
+      if (trimmed == null || trimmed.isEmpty) continue;
+      if (trimmed == currentTitle) continue;
+      if (!details.contains(trimmed)) details.add(trimmed);
+    }
+    return details;
+  }
+}
+
 class ReminderLocationCubit extends Cubit<ReminderLocationState> {
   ReminderLocationCubit(
     this._formCubit, {
@@ -56,45 +118,39 @@ class ReminderLocationCubit extends Cubit<ReminderLocationState> {
     await _resolveAddress(latitude, longitude);
   }
 
-  Future<void> useCurrentLocation() async {
-    emit(
-      state.copyWith(
-        isLocating: true,
-        shouldClearMessage: true,
-      ),
-    );
+  Future<Position?> useCurrentLocation() async {
+    emit(state.copyWith(
+      isLocating: true,
+      shouldClearMessage: true,
+    ));
     try {
       if (!await Geolocator.isLocationServiceEnabled()) {
-        emit(
-          state.copyWith(
-            isLocating: false,
-            message: 'Location services are disabled.',
-          ),
-        );
-        return;
+        emit(state.copyWith(
+          isLocating: false,
+          message: 'Location services are disabled.',
+        ));
+        return null;
       }
 
       if (!await _ensurePermissionGranted()) {
-        emit(
-          state.copyWith(
-            isLocating: false,
-            message: 'Location permissions are denied.',
-          ),
-        );
-        return;
+        emit(state.copyWith(
+          isLocating: false,
+          message: 'Location permissions are denied.',
+        ));
+        return null;
       }
 
       final position = await Geolocator.getCurrentPosition();
       await _handleCoordinateUpdate(position.latitude, position.longitude);
       emit(state.copyWith(isLocating: false));
+      return position;
     } catch (_) {
-      emit(
-        state.copyWith(
-          isLocating: false,
-          message: 'Unable to access current location.',
-        ),
-      );
+      emit(state.copyWith(
+        isLocating: false,
+        message: 'Unable to access current location.',
+      ));
     }
+    return null;
   }
 
   Future<void> updateManualCoordinate(double latitude, double longitude) async {
@@ -112,14 +168,12 @@ class ReminderLocationCubit extends Cubit<ReminderLocationState> {
   }
 
   Future<void> _resolveAddress(double latitude, double longitude) async {
-    final fallback = '${latitude.toStringAsFixed(4)}, ${longitude.toStringAsFixed(4)}';
-    emit(
-      state.copyWith(
+    final fallback =
+        '${latitude.toStringAsFixed(4)}, ${longitude.toStringAsFixed(4)}';
+    emit(state.copyWith(
         isResolvingAddress: true,
         shouldClearMessage: true,
-        shouldClearPlaceInfo: true,
-      ),
-    );
+        shouldClearPlaceInfo: true));
     try {
       final placemarks = await placemarkFromCoordinates(latitude, longitude);
       final firstPlacemark = placemarks.isNotEmpty ? placemarks.first : null;
@@ -128,23 +182,18 @@ class ReminderLocationCubit extends Cubit<ReminderLocationState> {
       if (formatted != null) {
         _formCubit.updateLocation(formatted);
       }
-      emit(
-        state.copyWith(
+      emit(state.copyWith(
           isResolvingAddress: false,
           address: label,
-          placeInfo:
-              firstPlacemark != null ? ResolvedPlaceInfo.fromPlacemark(firstPlacemark) : null,
-        ),
-      );
+          placeInfo: firstPlacemark != null
+              ? ResolvedPlaceInfo.fromPlacemark(firstPlacemark)
+              : null));
     } catch (_) {
-      emit(
-        state.copyWith(
+      emit(state.copyWith(
           isResolvingAddress: false,
           message: 'Unable to resolve address.',
           address: fallback,
-          shouldClearPlaceInfo: true,
-        ),
-      );
+          shouldClearPlaceInfo: true));
     }
   }
 
@@ -177,68 +226,6 @@ class ReminderLocationCubit extends Cubit<ReminderLocationState> {
         permission == LocationPermission.deniedForever) {
       return false;
     }
-
     return true;
-  }
-}
-
-class ResolvedPlaceInfo {
-  const ResolvedPlaceInfo({
-    this.name,
-    this.street,
-    this.subLocality,
-    this.locality,
-    this.administrativeArea,
-    this.country,
-    this.postalCode,
-  });
-
-  factory ResolvedPlaceInfo.fromPlacemark(Placemark placemark) {
-    String? clean(String? value) {
-      final trimmed = value?.trim();
-      if (trimmed == null || trimmed.isEmpty) return null;
-      return trimmed;
-    }
-
-    return ResolvedPlaceInfo(
-      name: clean(placemark.name),
-      street: clean(placemark.street),
-      subLocality: clean(placemark.subLocality),
-      locality: clean(placemark.locality),
-      administrativeArea: clean(placemark.administrativeArea),
-      country: clean(placemark.country),
-      postalCode: clean(placemark.postalCode),
-    );
-  }
-
-  final String? name;
-  final String? street;
-  final String? subLocality;
-  final String? locality;
-  final String? administrativeArea;
-  final String? country;
-  final String? postalCode;
-
-  String? get title =>
-      name ?? street ?? subLocality ?? locality ?? administrativeArea ?? country;
-
-  List<String> get detailLines {
-    final details = <String>[];
-    final currentTitle = title;
-    for (final value in [
-      street,
-      subLocality,
-      locality,
-      administrativeArea,
-      country,
-    ]) {
-      final trimmed = value?.trim();
-      if (trimmed == null || trimmed.isEmpty) continue;
-      if (trimmed == currentTitle) continue;
-      if (!details.contains(trimmed)) {
-        details.add(trimmed);
-      }
-    }
-    return details;
   }
 }
