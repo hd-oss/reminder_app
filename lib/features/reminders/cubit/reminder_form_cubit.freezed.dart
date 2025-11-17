@@ -25,6 +25,7 @@ mixin _$ReminderFormState {
   ReminderPriority get priority => throw _privateConstructorUsedError;
   bool get locationBased => throw _privateConstructorUsedError;
   String get location => throw _privateConstructorUsedError;
+  double? get radiusMeters => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   double? get latitude => throw _privateConstructorUsedError;
   double? get longitude => throw _privateConstructorUsedError;
@@ -52,6 +53,7 @@ abstract class $ReminderFormStateCopyWith<$Res> {
       ReminderPriority priority,
       bool locationBased,
       String location,
+      double? radiusMeters,
       String description,
       double? latitude,
       double? longitude});
@@ -83,6 +85,7 @@ class _$ReminderFormStateCopyWithImpl<$Res, $Val extends ReminderFormState>
     Object? priority = null,
     Object? locationBased = null,
     Object? location = null,
+    Object? radiusMeters = freezed,
     Object? description = null,
     Object? latitude = freezed,
     Object? longitude = freezed,
@@ -124,6 +127,10 @@ class _$ReminderFormStateCopyWithImpl<$Res, $Val extends ReminderFormState>
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
               as String,
+      radiusMeters: freezed == radiusMeters
+          ? _value.radiusMeters
+          : radiusMeters // ignore: cast_nullable_to_non_nullable
+              as double?,
       description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -172,6 +179,7 @@ abstract class _$$ReminderFormStateImplCopyWith<$Res>
       ReminderPriority priority,
       bool locationBased,
       String location,
+      double? radiusMeters,
       String description,
       double? latitude,
       double? longitude});
@@ -202,6 +210,7 @@ class __$$ReminderFormStateImplCopyWithImpl<$Res>
     Object? priority = null,
     Object? locationBased = null,
     Object? location = null,
+    Object? radiusMeters = freezed,
     Object? description = null,
     Object? latitude = freezed,
     Object? longitude = freezed,
@@ -243,6 +252,10 @@ class __$$ReminderFormStateImplCopyWithImpl<$Res>
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
               as String,
+      radiusMeters: freezed == radiusMeters
+          ? _value.radiusMeters
+          : radiusMeters // ignore: cast_nullable_to_non_nullable
+              as double?,
       description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -272,6 +285,7 @@ class _$ReminderFormStateImpl implements _ReminderFormState {
       required this.priority,
       required this.locationBased,
       required this.location,
+      this.radiusMeters,
       required this.description,
       this.latitude,
       this.longitude})
@@ -302,6 +316,8 @@ class _$ReminderFormStateImpl implements _ReminderFormState {
   @override
   final String location;
   @override
+  final double? radiusMeters;
+  @override
   final String description;
   @override
   final double? latitude;
@@ -310,7 +326,7 @@ class _$ReminderFormStateImpl implements _ReminderFormState {
 
   @override
   String toString() {
-    return 'ReminderFormState(editing: $editing, title: $title, date: $date, times: $times, repeat: $repeat, category: $category, priority: $priority, locationBased: $locationBased, location: $location, description: $description, latitude: $latitude, longitude: $longitude)';
+    return 'ReminderFormState(editing: $editing, title: $title, date: $date, times: $times, repeat: $repeat, category: $category, priority: $priority, locationBased: $locationBased, location: $location, radiusMeters: $radiusMeters, description: $description, latitude: $latitude, longitude: $longitude)';
   }
 
   @override
@@ -331,6 +347,8 @@ class _$ReminderFormStateImpl implements _ReminderFormState {
                 other.locationBased == locationBased) &&
             (identical(other.location, location) ||
                 other.location == location) &&
+            (identical(other.radiusMeters, radiusMeters) ||
+                other.radiusMeters == radiusMeters) &&
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.latitude, latitude) ||
@@ -351,6 +369,7 @@ class _$ReminderFormStateImpl implements _ReminderFormState {
       priority,
       locationBased,
       location,
+      radiusMeters,
       description,
       latitude,
       longitude);
@@ -376,6 +395,7 @@ abstract class _ReminderFormState implements ReminderFormState {
       required final ReminderPriority priority,
       required final bool locationBased,
       required final String location,
+      final double? radiusMeters,
       required final String description,
       final double? latitude,
       final double? longitude}) = _$ReminderFormStateImpl;
@@ -398,6 +418,8 @@ abstract class _ReminderFormState implements ReminderFormState {
   bool get locationBased;
   @override
   String get location;
+  @override
+  double? get radiusMeters;
   @override
   String get description;
   @override

@@ -16,11 +16,13 @@ class ReminderValidationException implements Exception {
 }
 
 class ReminderFormCubit extends Cubit<ReminderFormState> {
-  ReminderFormCubit({Reminder? reminder}) : super(ReminderFormState.initial(reminder: reminder));
+  ReminderFormCubit({Reminder? reminder})
+      : super(ReminderFormState.initial(reminder: reminder));
 
   void updateTitle(String value) => emit(state.copyWith(title: value));
 
-  void updateDescription(String value) => emit(state.copyWith(description: value));
+  void updateDescription(String value) =>
+      emit(state.copyWith(description: value));
 
   void updateDate(DateTime value) => emit(state.copyWith(date: value));
 
@@ -35,23 +37,30 @@ class ReminderFormCubit extends Cubit<ReminderFormState> {
     emit(state.copyWith(times: next));
   }
 
-  void selectRepeat(ReminderRepeat repeat) => emit(state.copyWith(repeat: repeat));
+  void selectRepeat(ReminderRepeat repeat) =>
+      emit(state.copyWith(repeat: repeat));
 
   void toggleLocation(bool enabled) {
+    final nextTimes = enabled ? <String>[] : state.times;
     emit(
       state.copyWith(
         locationBased: enabled,
         location: enabled ? state.location : '',
         latitude: enabled ? state.latitude : null,
         longitude: enabled ? state.longitude : null,
+        radiusMeters: enabled ? (state.radiusMeters ?? 200) : null,
+        times: nextTimes,
       ),
     );
   }
 
   void updateLocation(String value) => emit(state.copyWith(location: value));
 
+  void updateRadius(double value) => emit(state.copyWith(radiusMeters: value));
+
   void updateCoordinate(double latitude, double longitude) {
-    final coordinateLabel = '${latitude.toStringAsFixed(4)}, ${longitude.toStringAsFixed(4)}';
+    final coordinateLabel =
+        '${latitude.toStringAsFixed(4)}, ${longitude.toStringAsFixed(4)}';
     emit(
       state.copyWith(
         latitude: latitude,
@@ -61,17 +70,39 @@ class ReminderFormCubit extends Cubit<ReminderFormState> {
     );
   }
 
-  void selectCategory(ReminderCategory category) => emit(state.copyWith(category: category));
+  void selectCategory(ReminderCategory category) =>
+      emit(state.copyWith(category: category));
 
-  void selectPriority(ReminderPriority priority) => emit(state.copyWith(priority: priority));
+  void selectPriority(ReminderPriority priority) =>
+      emit(state.copyWith(priority: priority));
 
   Reminder buildReminder() {
-    if (state.times.isEmpty) {
-      throw const ReminderValidationException('Reminder time cannot be empty. Please pick a valid time.');
-    }
-    final title = state.title.trim().isEmpty ? 'Untitled Reminder' : state.title.trim();
+    final title =
+        state.title.trim().isEmpty ? 'Untitled Reminder' : state.title.trim();
     final times = state.times.where((time) => time.trim().isNotEmpty).toList();
-    final description = state.description.trim().isEmpty ? null : state.description.trim();
+    final description =
+        state.description.trim().isEmpty ? null : state.description.trim();
+
+    if (state.locationBased) {
+      if (state.latitude == null || state.longitude == null) {
+        throw const ReminderValidationException(
+            'Please pick a location for this reminder.');
+      }
+      if (state.location.trim().isEmpty) {
+        throw const ReminderValidationException(
+            'Location label cannot be empty.');
+      }
+      if (state.radiusMeters == null || state.radiusMeters! <= 0) {
+        throw const ReminderValidationException(
+            'Please select a valid radius.');
+      }
+    } else {
+      if (state.times.isEmpty) {
+        throw const ReminderValidationException(
+            'Reminder time cannot be empty. Please pick a valid time.');
+      }
+    }
+
     final reminderTimes = state.locationBased ? <String>[] : times;
 
     return Reminder(
@@ -83,7 +114,10 @@ class ReminderFormCubit extends Cubit<ReminderFormState> {
       category: state.category,
       priority: state.priority,
       locationBased: state.locationBased,
-      location: state.locationBased ? (state.location.trim().isEmpty ? null : state.location.trim()) : null,
+      location: state.locationBased
+          ? (state.location.trim().isEmpty ? null : state.location.trim())
+          : null,
+      radiusMeters: state.locationBased ? state.radiusMeters : null,
       latitude: state.locationBased ? state.latitude : null,
       longitude: state.locationBased ? state.longitude : null,
       description: description,
@@ -103,6 +137,7 @@ class ReminderFormState with _$ReminderFormState {
     required ReminderPriority priority,
     required bool locationBased,
     required String location,
+    double? radiusMeters,
     required String description,
     double? latitude,
     double? longitude,
@@ -119,6 +154,7 @@ class ReminderFormState with _$ReminderFormState {
       priority: reminder?.priority ?? ReminderPriority.medium,
       locationBased: reminder?.locationBased ?? false,
       location: reminder?.location ?? '',
+      radiusMeters: reminder?.radiusMeters ?? 200,
       description: reminder?.description ?? '',
       latitude: reminder?.latitude,
       longitude: reminder?.longitude,

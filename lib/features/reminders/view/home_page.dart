@@ -21,7 +21,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _checkLocationPermission());
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _checkLocationPermission(),
+    );
   }
 
   Future<void> _checkLocationPermission() async {
@@ -33,7 +35,10 @@ class _HomePageState extends State<HomePage> {
         messenger
           ..hideCurrentSnackBar()
           ..showSnackBar(
-            const SnackBar(content: Text('Location services are disabled. Enable them to use location reminders.')),
+            const SnackBar(
+                content: Text(
+              'Location services are disabled. Enable them to use location reminders.',
+            )),
           );
         return;
       }
@@ -43,12 +48,16 @@ class _HomePageState extends State<HomePage> {
         permission = await Geolocator.requestPermission();
       }
 
-      if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
         if (!mounted) return;
         messenger
           ..hideCurrentSnackBar()
           ..showSnackBar(
-            const SnackBar(content: Text('Location permission is needed for location-based reminders.')),
+            const SnackBar(
+                content: Text(
+              'Location permission is needed for location-based reminders.',
+            )),
           );
       }
     } catch (_) {
@@ -66,26 +75,26 @@ class _HomePageState extends State<HomePage> {
     final dateText = DateFormat('EEEE, MMMM d, yyyy').format(DateTime.now());
 
     return Scaffold(
+      appBar: AppBar(toolbarHeight: 0),
       backgroundColor: AppColors.background,
       body: BlocListener<ReminderListBloc, ReminderListState>(
-        listenWhen: (previous, current) => previous.error != current.error,
-        listener: (context, state) {
-          final message = state.error;
-          if (message != null) {
+          listenWhen: (previous, current) => previous.error != current.error,
+          listener: (context, state) {
+            final message = state.error;
+            if (message == null) return;
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(SnackBar(content: Text(message)));
-          }
-        },
-        child: SafeArea(
-          child: Column(children: [
-            Padding(
-                padding: const EdgeInsets.all(16),
-                child: _Header(dateText: dateText)),
-            const Expanded(child: _RemindersList()),
-          ]),
-        ),
-      ),
+          },
+          child: SafeArea(
+            child: Column(children: [
+              Container(
+                  color: AppColors.card,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: _Header(dateText: dateText)),
+              const Expanded(child: _RemindersList()),
+            ]),
+          )),
       floatingActionButton: FloatingActionButton(
           heroTag: 'add_reminder_fab',
           backgroundColor: AppColors.primary,
@@ -93,23 +102,22 @@ class _HomePageState extends State<HomePage> {
           shape: const CircleBorder(),
           child: Container(
             decoration: const BoxDecoration(
-                shape: BoxShape.circle, color: Colors.white),
+              shape: BoxShape.circle,
+              color: Colors.white,
+            ),
             child: const Icon(Icons.add_rounded,
                 color: AppColors.primary, size: 26),
           )),
     );
   }
 
-  void _openAdd(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => BlocProvider(
-          create: (_) => ReminderFormCubit(),
-          child: const ReminderFormPage(),
-        ),
-      ),
-    );
-  }
+  void _openAdd(BuildContext context) => Navigator.of(context).push(
+        MaterialPageRoute(
+            builder: (_) => BlocProvider(
+                  create: (_) => ReminderFormCubit(),
+                  child: const ReminderFormPage(),
+                )),
+      );
 }
 
 class _Header extends StatelessWidget {
@@ -119,16 +127,16 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ReminderListBloc, ReminderListState>(
-      builder: (context, state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _TitleRow(todayCount: state.todayCount),
-            const SizedBox(height: 16),
-            _FilterChips(filter: state.filter),
-          ],
-        );
-      },
+      builder: (context, state) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 8),
+          _TitleRow(todayCount: state.todayCount),
+          const SizedBox(height: 8),
+          _FilterChips(filter: state.filter),
+          const SizedBox(height: 8),
+        ],
+      ),
     );
   }
 }
@@ -143,6 +151,7 @@ class _TitleRow extends StatelessWidget {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       minTileHeight: 0,
+      minVerticalPadding: 0,
       title: Text('Reminders',
           style: Theme.of(context)
               .textTheme
@@ -185,7 +194,7 @@ class _FilterChips extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 48,
+      height: 50,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
@@ -224,27 +233,35 @@ class _RemindersList extends StatelessWidget {
         if (state.isLoading && state.reminders.isEmpty) {
           return const _LoadingState();
         }
-        if (state.error != null && reminders.isEmpty) {
-          return _ErrorState(message: state.error!);
-        }
-        if (reminders.isEmpty) return _EmptyState();
 
         return RefreshIndicator(
           color: AppColors.primary,
           onRefresh: () async {
-            context.read<ReminderListBloc>().add(const ReminderListEvent.remindersRequested());
+            context
+                .read<ReminderListBloc>()
+                .add(const ReminderListEvent.remindersRequested());
           },
           child: ListView.separated(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 120),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
             physics: const AlwaysScrollableScrollPhysics(),
-            itemBuilder: (context, index) => ReminderCard(
-              reminder: reminders[index],
-              onMenuTap: () => Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => BlocProvider(
-                    create: (_) => ReminderFormCubit(reminder: reminders[index]),
-                    child: const ReminderFormPage()),
-              )),
-            ),
+            itemBuilder: (context, index) {
+              if (state.error != null && reminders.isEmpty) {
+                return _ErrorState(message: state.error!);
+              }
+              if (reminders.isEmpty) return _EmptyState();
+
+              return ReminderCard(
+                  reminder: reminders[index],
+                  onMenuTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (_) => BlocProvider(
+                                  create: (_) => ReminderFormCubit(
+                                    reminder: reminders[index],
+                                  ),
+                                  child: const ReminderFormPage(),
+                                )),
+                      ));
+            },
             separatorBuilder: (_, __) => const SizedBox(height: 8),
             itemCount: reminders.length,
           ),

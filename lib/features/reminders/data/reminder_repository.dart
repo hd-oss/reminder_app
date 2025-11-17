@@ -10,7 +10,7 @@ class ReminderRepository {
 
   static const _dbName = 'reminders.db';
   static const _tableName = 'reminders';
-  static const _dbVersion = 2;
+  static const _dbVersion = 3;
 
   Database? _database;
 
@@ -35,16 +35,12 @@ class ReminderRepository {
           priority TEXT NOT NULL,
           location TEXT,
           location_based INTEGER NOT NULL,
+          radius_meters REAL,
           latitude REAL,
           longitude REAL,
           description TEXT
         )
       '''),
-      onUpgrade: (db, oldVersion, newVersion) async {
-        if (oldVersion < 2) {
-          await db.execute('ALTER TABLE $_tableName ADD COLUMN description TEXT');
-        }
-      },
     );
     return _database!;
   }
@@ -70,6 +66,18 @@ class ReminderRepository {
   Future<void> deleteReminder(String id) async {
     final database = await _db;
     await database.delete(_tableName, where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<Reminder?> findById(String id) async {
+    final database = await _db;
+    final rows = await database.query(
+      _tableName,
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
+    if (rows.isEmpty) return null;
+    return _mapToReminder(rows.first);
   }
 
   Future<void> clear() async {
@@ -104,6 +112,7 @@ class ReminderRepository {
       ),
       location: map['location'] as String?,
       locationBased: (map['location_based'] as int) == 1,
+      radiusMeters: _toDouble(map['radius_meters']) ?? 200,
       latitude: _toDouble(map['latitude']),
       longitude: _toDouble(map['longitude']),
       description: map['description'] as String?,
@@ -120,6 +129,7 @@ class ReminderRepository {
         'priority': reminder.priority.name,
         'location': reminder.location,
         'location_based': reminder.locationBased ? 1 : 0,
+        'radius_meters': reminder.radiusMeters,
         'latitude': reminder.latitude,
         'longitude': reminder.longitude,
         'description': reminder.description,

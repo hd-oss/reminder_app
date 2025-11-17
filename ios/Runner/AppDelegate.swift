@@ -1,6 +1,7 @@
 import UIKit
 import Flutter
 import flutter_local_notifications
+import native_geofence
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -11,6 +12,11 @@ import flutter_local_notifications
   ) -> Bool {
     // This is required to make any communication available in the action isolate.
     FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
+        GeneratedPluginRegistrant.register(with: registry)
+    }
+
+    // Used by plugin: native_geofence
+    NativeGeofencePlugin.setPluginRegistrantCallback { registry in
         GeneratedPluginRegistrant.register(with: registry)
     }
 
@@ -26,18 +32,6 @@ import flutter_local_notifications
   /// This delegate method is only called if the app has requested and been granted 
   /// providesAppNotificationSettings permission.
   /// @see https://developer.apple.com/documentation/usernotifications/unnotificationsettings/providesappnotificationsettings
-  @available(iOS 12.0, *)
-  override func userNotificationCenter(
-      _ center: UNUserNotificationCenter,
-      openSettingsFor notification: UNNotification?
-  ) {
-      let controller = window?.rootViewController as! FlutterViewController
-      let channel = FlutterMethodChannel(
-          name: "com.example.flutter_local_notifications_example/settings",
-          binaryMessenger: controller.binaryMessenger)
-
-      channel.invokeMethod("showNotificationSettings", arguments: nil)
-  }
 
   override func userNotificationCenter(
     _ center: UNUserNotificationCenter,

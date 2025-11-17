@@ -17,7 +17,7 @@ class ReminderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
           color: AppColors.card,
           borderRadius: BorderRadius.circular(12),
@@ -35,7 +35,7 @@ class ReminderCard extends StatelessWidget {
           ListTile(
               contentPadding: EdgeInsets.zero,
               minTileHeight: 0,
-              minVerticalPadding: 0,
+              minVerticalPadding: 8,
               title: Text(reminder.title,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
@@ -46,14 +46,24 @@ class ReminderCard extends StatelessWidget {
                       style: theme.textTheme.bodySmall
                           ?.copyWith(color: Colors.grey))
                   : null,
-              trailing: IconButton(
-                tooltip: 'More',
-                style: IconButton.styleFrom(
-                    backgroundColor: AppColors.muted,
-                    shape: const CircleBorder()),
-                onPressed: onMenuTap,
-                icon: const Icon(Icons.edit_note_rounded,
-                    color: AppColors.mutedForeground),
+              trailing: InkWell(
+                // tooltip: 'More',
+                // style: IconButton.styleFrom(
+                //     backgroundColor: AppColors.muted,
+                //     shape: const CircleBorder()),
+                borderRadius: BorderRadius.circular(100),
+                onTap: onMenuTap,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.muted
+                  ),
+                  padding: const EdgeInsets.all(8),
+                  child: const Icon(
+                    Icons.edit_attributes_rounded,
+                    color: AppColors.mutedForeground,
+                  ),
+                ),
               )),
           if (!reminder.locationBased && reminder.times.isNotEmpty) ...[
             const SizedBox(height: 8),

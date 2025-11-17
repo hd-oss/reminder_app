@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../core/geofence_service.dart';
 import '../../../core/notification_service.dart';
 import '../data/reminder_repository.dart';
 import '../models/reminder.dart';
@@ -11,8 +12,11 @@ part 'reminder_list_event.dart';
 part 'reminder_list_state.dart';
 
 class ReminderListBloc extends Bloc<ReminderListEvent, ReminderListState> {
-  ReminderListBloc(this._repository, this._notificationService)
-      : super(const ReminderListState(
+  ReminderListBloc(
+    this._repository,
+    this._notificationService,
+    this._geofenceService,
+  ) : super(const ReminderListState(
           reminders: [],
           filter: ReminderFilter.all,
           isLoading: true,
@@ -26,6 +30,7 @@ class ReminderListBloc extends Bloc<ReminderListEvent, ReminderListState> {
 
   final ReminderRepository _repository;
   final ReminderNotificationService _notificationService;
+  final ReminderLocationTriggerService _geofenceService;
 
   Future<void> _onRemindersRequested(
     _RemindersRequested event,
@@ -39,7 +44,8 @@ class ReminderListBloc extends Bloc<ReminderListEvent, ReminderListState> {
         reminders: sorted,
         isLoading: false,
       ));
-      await _notificationService.rescheduleAll(sorted);
+      // await _notificationService.rescheduleAll(sorted);
+      // await _geofenceService.syncLocationReminders(sorted);
     } catch (_) {
       emit(state.copyWith(
         isLoading: false,
@@ -63,11 +69,16 @@ class ReminderListBloc extends Bloc<ReminderListEvent, ReminderListState> {
     try {
       await _repository.saveReminder(event.reminder);
       final reminders = [...previousReminders, event.reminder];
+
       emit(state.copyWith(
         reminders: _sortReminders(reminders),
         error: null,
       ));
-      await _notificationService.scheduleReminder(event.reminder);
+
+      event.reminder.locationBased
+          ? await _geofenceService.registerReminder(event.reminder)
+          : await _notificationService.scheduleReminder(event.reminder);
+
       event.onSuccess?.call();
     } catch (_) {
       emit(state.copyWith(
@@ -82,33 +93,30 @@ class ReminderListBloc extends Bloc<ReminderListEvent, ReminderListState> {
     _ReminderUpdated event,
     Emitter<ReminderListState> emit,
   ) async {
-    final previousReminders = List<Reminder>.from(state.reminders);
     try {
-      Reminder? previous;
-      for (final reminder in previousReminders) {
-        if (reminder.id == event.reminder.id) {
-          previous = reminder;
-          break;
-        }
-      }
+      Reminder? previous = await _repository.findById(event.reminder.id);
+
       await _repository.saveReminder(event.reminder);
+
       final reminders = state.reminders.map((reminder) {
         return reminder.id == event.reminder.id ? event.reminder : reminder;
       }).toList();
+
       if (previous != null) {
-        await _notificationService.cancelReminder(previous);
+        previous.locationBased
+            ? await _geofenceService.removeReminder(previous.id)
+            : await _notificationService.cancelReminder(previous);
       }
-      emit(state.copyWith(
-        reminders: _sortReminders(reminders),
-        error: null,
-      ));
-      await _notificationService.scheduleReminder(event.reminder);
+
+      emit(state.copyWith(reminders: _sortReminders(reminders), error: null));
+
+      event.reminder.locationBased
+          ? await _geofenceService.registerReminder(event.reminder)
+          : await _notificationService.scheduleReminder(event.reminder);
+
       event.onSuccess?.call();
     } catch (_) {
-      emit(state.copyWith(
-        reminders: previousReminders,
-        error: 'Failed to update reminder.',
-      ));
+      emit(state.copyWith(error: 'Failed to update reminder.'));
       event.onError?.call('Failed to update reminder.');
     }
   }
@@ -127,15 +135,16 @@ class ReminderListBloc extends Bloc<ReminderListEvent, ReminderListState> {
         }
       }
       await _repository.deleteReminder(event.id);
-      final reminders =
-          previousReminders.where((reminder) => reminder.id != event.id).toList();
-      emit(state.copyWith(
-        reminders: reminders,
-        error: null,
-      ));
-      if (target != null) {
-        await _notificationService.cancelReminder(target);
-      }
+      final reminders = previousReminders
+          .where((reminder) => reminder.id != event.id)
+          .toList();
+
+      emit(state.copyWith(reminders: reminders, error: null));
+
+      target?.locationBased ?? false
+          ? await _geofenceService.removeReminder(event.id)
+          : await _notificationService.cancelReminder(target!);
+
       event.onSuccess?.call();
     } catch (_) {
       emit(state.copyWith(

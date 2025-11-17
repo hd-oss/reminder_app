@@ -12,7 +12,7 @@ import java.util.*
 class MainActivity: FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "dexterx.dev/flutter_local_notifications_example").setMethodCallHandler { call, result ->
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "dexterx.dev/com.example.reminder_app").setMethodCallHandler { call, result ->
             if ("drawableToUri" == call.method) {
                 val resourceId = this@MainActivity.resources.getIdentifier(call.arguments as String, "drawable", this@MainActivity.packageName)
                 result.success(resourceToUriString(this@MainActivity.applicationContext, resourceId))

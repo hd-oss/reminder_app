@@ -14,6 +14,7 @@ class Reminder with _$Reminder {
     @Default(ReminderPriority.medium) ReminderPriority priority,
     String? location,
     @Default(false) bool locationBased,
+    double? radiusMeters,
     double? latitude,
     double? longitude,
     String? description,

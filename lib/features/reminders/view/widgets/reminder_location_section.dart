@@ -125,13 +125,23 @@ class _LocationInputSectionState extends State<_LocationInputSection> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _LocationMap(
-              mapController: _mapController,
-              selectedPoint: _selectedPoint,
-              hasSelection: _hasSelection,
-              onPointSelected: (point) => context
-                  .read<ReminderLocationCubit>()
-                  .updateManualCoordinate(point.latitude, point.longitude),
+            BlocBuilder<ReminderFormCubit, ReminderFormState>(
+              buildWhen: (previous, current) =>
+                  previous.latitude != current.latitude ||
+                  previous.longitude != current.longitude ||
+                  previous.radiusMeters != current.radiusMeters,
+              builder: (context, formState) {
+                final radius = formState.radiusMeters ?? 200;
+                return _LocationMap(
+                  mapController: _mapController,
+                  selectedPoint: _selectedPoint,
+                  hasSelection: _hasSelection,
+                  onPointSelected: (point) => context
+                      .read<ReminderLocationCubit>()
+                      .updateManualCoordinate(point.latitude, point.longitude),
+                  radiusMeters: radius,
+                );
+              },
             ),
             const SizedBox(height: 12),
             BlocBuilder<ReminderLocationCubit, ReminderLocationState>(
@@ -145,6 +155,8 @@ class _LocationInputSectionState extends State<_LocationInputSection> {
                 return _PlaceInfoDetails(info: state.placeInfo!);
               },
             ),
+            const SizedBox(height: 12),
+            const _RadiusSelector(),
             const SizedBox(height: 8),
             locationReminderHint(),
           ],
@@ -160,17 +172,19 @@ class _LocationMap extends StatelessWidget {
     required this.selectedPoint,
     required this.hasSelection,
     required this.onPointSelected,
+    required this.radiusMeters,
   });
 
   final MapController mapController;
   final latlng.LatLng? selectedPoint;
   final bool hasSelection;
   final ValueChanged<latlng.LatLng> onPointSelected;
+  final double radiusMeters;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300,
+      height: MediaQuery.sizeOf(context).height / 2.3,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
       child: Stack(children: [
@@ -193,16 +207,29 @@ class _LocationMap extends StatelessWidget {
                 userAgentPackageName: 'com.example.reminder_app',
               ),
               if (hasSelection && selectedPoint != null)
+                CircleLayer(circles: [
+                  CircleMarker(
+                      point: selectedPoint!,
+                      radius: radiusMeters,
+                      useRadiusInMeter: true,
+                      color: AppColors.primary.withOpacity(0.12),
+                      borderColor: AppColors.primary.withOpacity(0.4),
+                      borderStrokeWidth: 2),
+                ]),
+              if (hasSelection && selectedPoint != null)
                 MarkerLayer(markers: [
                   Marker(
-                      point: selectedPoint!,
-                      width: 70,
-                      height: 70,
-                      child: const Align(
+                    point: selectedPoint!,
+                    width: 70,
+                    height: 70,
+                    child: const Align(
                         alignment: Alignment.topCenter,
-                        child: Icon(Icons.location_pin,
-                            color: AppColors.primary, size: 35),
-                      )),
+                        child: Icon(
+                          Icons.location_pin,
+                          color: AppColors.primary,
+                          size: 38,
+                        )),
+                  ),
                 ]),
             ]),
         BlocBuilder<ReminderLocationCubit, ReminderLocationState>(
@@ -309,6 +336,50 @@ class _PlaceInfoDetails extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _RadiusSelector extends StatelessWidget {
+  const _RadiusSelector();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ReminderFormCubit, ReminderFormState>(
+      buildWhen: (previous, current) =>
+          previous.radiusMeters != current.radiusMeters,
+      builder: (context, state) {
+        final currentRadius = state.radiusMeters ?? 200;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Radius',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(fontWeight: FontWeight.w600)),
+                Text('${currentRadius.toStringAsFixed(0)} m',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: AppColors.mutedForeground)),
+              ],
+            ),
+            Slider(
+              value: currentRadius.clamp(50, 1000),
+              min: 50,
+              max: 1000,
+              divisions: 19,
+              label: '${currentRadius.toStringAsFixed(0)} m',
+              activeColor: AppColors.primary,
+              onChanged: context.read<ReminderFormCubit>().updateRadius,
+            ),
+          ],
+        );
+      },
     );
   }
 }

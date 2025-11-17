@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:reminder_app/core/geofence_service.dart';
 import 'package:reminder_app/features/reminders/data/reminder_repository.dart';
 import 'package:reminder_app/features/reminders/models/reminder.dart';
 import 'package:reminder_app/main.dart';
@@ -12,11 +13,13 @@ void main() {
   testWidgets('renders home screen with reminders', (tester) async {
     final repository = _FakeReminderRepository();
     final notifications = _FakeNotificationService();
+    final geofenceService = _FakeGeofenceService();
 
     await tester.pumpWidget(
       ReminderApp(
         repository: repository,
         notificationService: notifications,
+        geofenceService: geofenceService,
       ),
     );
     await tester.pump();
@@ -58,4 +61,18 @@ class _FakeNotificationService implements ReminderNotificationService {
 
   @override
   Future<void> scheduleReminder(Reminder reminder) async {}
+}
+
+class _FakeGeofenceService implements ReminderLocationTriggerService {
+  @override
+  Future<void> initialize() async {}
+
+  @override
+  Future<void> registerReminder(Reminder reminder) async {}
+
+  @override
+  Future<void> removeReminder(String reminderId) async {}
+
+  @override
+  Future<void> syncLocationReminders(List<Reminder> reminders) async {}
 }
