@@ -3,8 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/app_theme.dart';
+import '../../../core/di/injection.dart';
+import '../../../core/utils/location_permission.dart';
 import '../bloc/reminder_list_bloc.dart';
 import '../cubit/reminder_form_cubit.dart';
+import '../cubit/reminder_location_cubit.dart';
 import '../models/reminder.dart';
 import '../widgets/reminder_card.dart';
 import 'reminder_form_page.dart';
@@ -46,13 +49,16 @@ class _HomePageState extends State<HomePage> {
                   color: AppColors.card,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: _Header(dateText: dateText)),
-              const Expanded(child: _RemindersList()),
+              Expanded(
+                  child: _RemindersList(
+                onOpenForm: _openForm,
+              )),
             ]),
           )),
       floatingActionButton: FloatingActionButton(
           heroTag: 'add_reminder_fab',
           backgroundColor: AppColors.primary,
-          onPressed: () => _openAdd(context),
+          onPressed: () => _openForm(context, null),
           shape: const CircleBorder(),
           child: Container(
             decoration: const BoxDecoration(
@@ -65,13 +71,16 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _openAdd(BuildContext context) => Navigator.of(context).push(
-        MaterialPageRoute(
-            builder: (_) => BlocProvider(
-                  create: (_) => ReminderFormCubit(),
-                  child: const ReminderFormPage(),
-                )),
-      );
+  void _openForm(BuildContext context, Reminder? reminder) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => _ReminderFormProviders(
+          reminder: reminder,
+          child: const ReminderFormPage(),
+        ),
+      ),
+    );
+  }
 }
 
 class _Header extends StatelessWidget {
@@ -177,7 +186,9 @@ class _FilterChips extends StatelessWidget {
 }
 
 class _RemindersList extends StatelessWidget {
-  const _RemindersList();
+  const _RemindersList({required this.onOpenForm});
+
+  final void Function(BuildContext context, Reminder? reminder) onOpenForm;
 
   @override
   Widget build(BuildContext context) {
@@ -283,6 +294,37 @@ class _ErrorState extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _ReminderFormProviders extends StatelessWidget {
+  const _ReminderFormProviders({
+    required this.child,
+    this.reminder,
+  });
+
+  final Widget child;
+  final Reminder? reminder;
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ReminderFormCubit>(
+          create: (_) => getIt<ReminderFormCubit>(param1: reminder),
+        ),
+        BlocProvider<ReminderLocationCubit>(
+          create: (context) => getIt<ReminderLocationCubit>(
+            param1: context.read<ReminderFormCubit>(),
+            param2: reminder?.location,
+          )..bootstrap(
+              latitude: reminder?.latitude,
+              longitude: reminder?.longitude,
+            ),
+        ),
+      ],
+      child: child,
     );
   }
 }

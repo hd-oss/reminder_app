@@ -1,26 +1,21 @@
+// ignore_for_file: unused_element
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:reminder_app/core/geofence_service.dart';
+import 'package:reminder_app/core/services/geofence_service.dart';
 import 'package:reminder_app/features/reminders/data/reminder_repository.dart';
 import 'package:reminder_app/features/reminders/models/reminder.dart';
 import 'package:reminder_app/main.dart';
-import 'package:reminder_app/core/notification_service.dart';
+import 'package:reminder_app/core/services/notification_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('renders home screen with reminders', (tester) async {
-    final repository = _FakeReminderRepository();
-    final notifications = _FakeNotificationService();
-    final geofenceService = _FakeGeofenceService();
 
     await tester.pumpWidget(
-      ReminderApp(
-        repository: repository,
-        notificationService: notifications,
-        geofenceService: geofenceService,
-      ),
+      const ReminderApp(),
     );
     await tester.pump();
 

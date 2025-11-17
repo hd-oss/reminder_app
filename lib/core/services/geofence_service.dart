@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:native_geofence/native_geofence.dart';
 
-import '../features/reminders/models/reminder.dart';
-import 'geofence_callback.dart';
+import '../../features/reminders/models/reminder.dart';
+import '../geofence_callback.dart';
 
 class GeofenceRegistrationException implements Exception {
   GeofenceRegistrationException(this.message, [this.cause]);

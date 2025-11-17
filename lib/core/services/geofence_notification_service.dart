@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:native_geofence/native_geofence.dart';
 
-import '../features/reminders/models/reminder.dart';
+import '../../features/reminders/models/reminder.dart';
 
 class GeofenceNotificationService {
   GeofenceNotificationService({FlutterLocalNotificationsPlugin? plugin})

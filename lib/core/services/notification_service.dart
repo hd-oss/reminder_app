@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-import '../features/reminders/models/reminder.dart';
+import '../../features/reminders/models/reminder.dart';
 
 abstract class ReminderNotificationService {
   Future<void> initialize();
@@ -136,7 +136,12 @@ class NotificationService implements ReminderNotificationService {
     await _ensureInitialized();
     final count = max(reminder.times.length, 1);
     for (var index = 0; index < count; index++) {
-      await _plugin.cancel(_notificationId(reminder.id, index));
+      try {
+        await _plugin.cancel(_notificationId(reminder.id, index));
+      } catch (error, stackTrace) {
+        _log('Failed to cancel notification for ${reminder.id}: $error',
+            stackTrace: stackTrace);
+      }
     }
     _log('Cancelled notifications for ${reminder.id} ($count)');
   }
@@ -232,7 +237,7 @@ class NotificationService implements ReminderNotificationService {
     }
   }
 
-  void _log(String message) {
-    log.log(message, name: _logTag);
+  void _log(String message, {StackTrace? stackTrace}) {
+    log.log(message, name: _logTag, stackTrace: stackTrace);
   }
 }

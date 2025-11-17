@@ -4,8 +4,8 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../core/geofence_service.dart';
-import '../../../core/notification_service.dart';
+import '../../../core/services/geofence_service.dart';
+import '../../../core/services/notification_service.dart';
 import '../data/reminder_repository.dart';
 import '../models/reminder.dart';
 
@@ -86,9 +86,9 @@ class ReminderListBloc extends Bloc<ReminderListEvent, ReminderListState> {
 
       emit(state.copyWith(
         reminders: previousReminders,
-        error: 'Failed to save reminder. ${_errorLabel(error)}',
+        error: 'Failed to save reminder.',
       ));
-      event.onError?.call('Failed to save reminder. ${_errorLabel(error)}');
+      event.onError?.call('Failed to save reminder.');
     }
   }
 
@@ -123,10 +123,8 @@ class ReminderListBloc extends Bloc<ReminderListEvent, ReminderListState> {
         await _registerReminder(previous);
       }
 
-      emit(state.copyWith(
-          error: 'Failed to update reminder. ${_errorLabel(error)}'));
-      event.onError
-          ?.call('Failed to update reminder. ${_errorLabel(error)}');
+      emit(state.copyWith(error: 'Failed to update reminder.'));
+      event.onError?.call('Failed to update reminder.');
     }
   }
 
@@ -144,18 +142,20 @@ class ReminderListBloc extends Bloc<ReminderListEvent, ReminderListState> {
         }
       }
       await _repository.deleteReminder(event.id);
+
       final reminders = previousReminders
           .where((reminder) => reminder.id != event.id)
           .toList();
 
       emit(state.copyWith(reminders: reminders, error: null));
 
-      target?.locationBased ?? false
-          ? await _geofenceService.removeReminder(event.id)
-          : await _notificationService.cancelReminder(target!);
+      if (target != null) {
+        await _safeCleanupOnDelete(target);
+      }
 
       event.onSuccess?.call();
-    } catch (_) {
+    } catch (error, stackTrace) {
+      _log('Failed to delete reminder', error, stackTrace);
       emit(state.copyWith(
         reminders: previousReminders,
         error: 'Failed to delete reminder.',
@@ -186,6 +186,15 @@ class ReminderListBloc extends Bloc<ReminderListEvent, ReminderListState> {
       await _geofenceService.removeReminder(reminder.id);
     } else {
       await _notificationService.cancelReminder(reminder);
+    }
+  }
+
+  Future<void> _safeCleanupOnDelete(Reminder reminder) async {
+    try {
+      await _cleanupReminder(reminder);
+    } catch (error, stackTrace) {
+      _log('Cleanup after delete failed (keeping local delete)', error,
+          stackTrace);
     }
   }
 

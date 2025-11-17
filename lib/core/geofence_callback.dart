@@ -3,8 +3,8 @@ import 'package:native_geofence/native_geofence.dart';
 
 import '../features/reminders/data/reminder_repository.dart';
 import '../features/reminders/models/reminder.dart';
-import 'geofence_notification_service.dart';
-import 'geofence_service.dart';
+import 'services/geofence_notification_service.dart';
+import 'services/geofence_service.dart';
 
 @pragma('vm:entry-point')
 Future<void> geofenceTriggered(GeofenceCallbackParams params) async {
