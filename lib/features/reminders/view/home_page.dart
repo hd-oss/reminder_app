@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/app_theme.dart';
@@ -21,53 +20,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => _checkLocationPermission(),
-    );
-  }
-
-  Future<void> _checkLocationPermission() async {
-    final messenger = ScaffoldMessenger.of(context);
-    try {
-      final hasService = await Geolocator.isLocationServiceEnabled();
-      if (!hasService) {
-        if (!mounted) return;
-        messenger
-          ..hideCurrentSnackBar()
-          ..showSnackBar(
-            const SnackBar(
-                content: Text(
-              'Location services are disabled. Enable them to use location reminders.',
-            )),
-          );
-        return;
-      }
-
-      var permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-      }
-
-      if (permission == LocationPermission.denied ||
-          permission == LocationPermission.deniedForever) {
-        if (!mounted) return;
-        messenger
-          ..hideCurrentSnackBar()
-          ..showSnackBar(
-            const SnackBar(
-                content: Text(
-              'Location permission is needed for location-based reminders.',
-            )),
-          );
-      }
-    } catch (_) {
-      if (!mounted) return;
-      messenger
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          const SnackBar(content: Text('Unable to check location permission.')),
-        );
-    }
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => ensureAlwaysLocationPermission(context));
   }
 
   @override

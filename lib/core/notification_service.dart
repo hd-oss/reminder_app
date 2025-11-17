@@ -1,3 +1,4 @@
+import 'dart:developer' as log;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ class NotificationService implements ReminderNotificationService {
   static const _channelId = 'reminder_schedule_channel';
   static const _channelName = 'Reminder Schedules';
   static const _channelDescription = 'Notifies you when reminders are due';
+  static const _logTag = '[NotificationService]';
 
   @override
   Future<void> initialize() async {
@@ -48,12 +50,14 @@ class NotificationService implements ReminderNotificationService {
     await _createNotificationChannel();
 
     _isInitialized = true;
+    _log('Initialized');
   }
 
   Future<void> _configureLocalTimeZone() async {
     tz.initializeTimeZones();
     final timeZoneName = await FlutterTimezone.getLocalTimezone();
     tz.setLocalLocation(tz.getLocation(timeZoneName));
+    _log('Timezone set to $timeZoneName');
   }
 
   Future<void> _createNotificationChannel() async {
@@ -85,6 +89,7 @@ class NotificationService implements ReminderNotificationService {
   Future<void> rescheduleAll(List<Reminder> reminders) async {
     await _ensureInitialized();
     await _plugin.cancelAll();
+    _log('Cancelled all before reschedule (${reminders.length} reminders)');
     for (final reminder in reminders) {
       await scheduleReminder(reminder);
     }
@@ -121,6 +126,8 @@ class NotificationService implements ReminderNotificationService {
             UILocalNotificationDateInterpretation.absoluteTime,
         payload: reminder.id,
       );
+      _log(
+          'Scheduled notification id=$id for ${reminder.id} at ${target.toIso8601String()}');
     }
   }
 
@@ -131,6 +138,7 @@ class NotificationService implements ReminderNotificationService {
     for (var index = 0; index < count; index++) {
       await _plugin.cancel(_notificationId(reminder.id, index));
     }
+    _log('Cancelled notifications for ${reminder.id} ($count)');
   }
 
   String _notificationBody(Reminder reminder) {
@@ -222,5 +230,9 @@ class NotificationService implements ReminderNotificationService {
     if (!_isInitialized) {
       await initialize();
     }
+  }
+
+  void _log(String message) {
+    log.log(message, name: _logTag);
   }
 }

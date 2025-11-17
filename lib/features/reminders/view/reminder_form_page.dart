@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/app_theme.dart';
+import '../../../core/utils/location_permission.dart';
 import '../bloc/reminder_list_bloc.dart';
 import '../cubit/reminder_form_cubit.dart';
 import '../models/reminder.dart';
@@ -112,12 +113,17 @@ class ReminderFormPage extends StatelessWidget {
     );
   }
 
-  void _submitReminder(BuildContext context, bool isEditing) {
+  Future<void> _submitReminder(BuildContext context, bool isEditing) async {
     final bloc = context.read<ReminderListBloc>();
     final navigator = Navigator.of(context);
     final messenger = ScaffoldMessenger.of(context);
     final cubit = context.read<ReminderFormCubit>();
     late final Reminder reminder;
+
+    if (cubit.state.locationBased) {
+      final allowed = await ensureAlwaysLocationPermission(context);
+      if (!allowed) return;
+    }
 
     try {
       reminder = cubit.buildReminder();
@@ -178,4 +184,5 @@ class ReminderFormPage extends StatelessWidget {
       onError: onError,
     ));
   }
+
 }

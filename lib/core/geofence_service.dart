@@ -1,8 +1,19 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:native_geofence/native_geofence.dart';
 
 import '../features/reminders/models/reminder.dart';
 import 'geofence_callback.dart';
+
+class GeofenceRegistrationException implements Exception {
+  GeofenceRegistrationException(this.message, [this.cause]);
+  final String message;
+  final Object? cause;
+
+  @override
+  String toString() => 'GeofenceRegistrationException: $message';
+}
 
 abstract class ReminderLocationTriggerService {
   Future<void> initialize();
@@ -17,6 +28,7 @@ class ReminderGeofenceService implements ReminderLocationTriggerService {
 
   final NativeGeofenceManager _manager;
   bool _initialized = false;
+  static const _logTag = '[GeofenceService]';
 
   static const double _defaultRadiusMeters = 200;
   static const String _geofencePrefix = 'reminder_';
@@ -26,6 +38,7 @@ class ReminderGeofenceService implements ReminderLocationTriggerService {
     if (_initialized) return;
     await _manager.initialize();
     _initialized = true;
+    log('initialized', name: _logTag);
   }
 
   @override
@@ -39,11 +52,12 @@ class ReminderGeofenceService implements ReminderLocationTriggerService {
       for (final id in existingIds) {
         if (_isReminderGeofenceId(id) && !targetIds.contains(id)) {
           await _manager.removeGeofenceById(id);
+          log('removed stale geofence $id', name: _logTag);
         }
       }
     } catch (error, stackTrace) {
-      debugPrint('Failed to synchronize geofences: $error');
-      debugPrintStack(stackTrace: stackTrace);
+      log('Failed to synchronize geofences: $error',
+          name: _logTag, stackTrace: stackTrace);
     }
 
     for (final reminder in validReminders) {
@@ -88,9 +102,14 @@ class ReminderGeofenceService implements ReminderLocationTriggerService {
     );
     try {
       await _manager.createGeofence(geofence, geofenceTriggered);
+      log(
+          'registered ${reminder.id} at ${reminder.latitude},${reminder.longitude} r=${geofence.radiusMeters}',
+          name: _logTag);
     } catch (error, stackTrace) {
-      debugPrint('Unable to register geofence for ${reminder.id}: $error');
-      debugPrintStack(stackTrace: stackTrace);
+      log('Unable to register geofence for ${reminder.id}: $error',
+          name: _logTag, stackTrace: stackTrace);
+      throw GeofenceRegistrationException(
+          'Failed to register location reminder', error);
     }
   }
 

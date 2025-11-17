@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -68,24 +70,25 @@ class ReminderListBloc extends Bloc<ReminderListEvent, ReminderListState> {
     final previousReminders = List<Reminder>.from(state.reminders);
     try {
       await _repository.saveReminder(event.reminder);
-      final reminders = [...previousReminders, event.reminder];
+      await _registerReminder(event.reminder);
 
       emit(state.copyWith(
-        reminders: _sortReminders(reminders),
+        reminders: _sortReminders([...previousReminders, event.reminder]),
         error: null,
       ));
 
-      event.reminder.locationBased
-          ? await _geofenceService.registerReminder(event.reminder)
-          : await _notificationService.scheduleReminder(event.reminder);
-
       event.onSuccess?.call();
-    } catch (_) {
+    } catch (error, stackTrace) {
+      _log('Failed to add reminder', error, stackTrace);
+      // Rollback persisted data and scheduled tasks
+      await _repository.deleteReminder(event.reminder.id);
+      await _cleanupReminder(event.reminder);
+
       emit(state.copyWith(
         reminders: previousReminders,
-        error: 'Failed to save reminder.',
+        error: 'Failed to save reminder. ${_errorLabel(error)}',
       ));
-      event.onError?.call('Failed to save reminder.');
+      event.onError?.call('Failed to save reminder. ${_errorLabel(error)}');
     }
   }
 
@@ -93,31 +96,37 @@ class ReminderListBloc extends Bloc<ReminderListEvent, ReminderListState> {
     _ReminderUpdated event,
     Emitter<ReminderListState> emit,
   ) async {
+    Reminder? previous;
     try {
-      Reminder? previous = await _repository.findById(event.reminder.id);
+      previous = await _repository.findById(event.reminder.id);
 
       await _repository.saveReminder(event.reminder);
+
+      if (previous != null) {
+        await _cleanupReminder(previous);
+      }
+
+      await _registerReminder(event.reminder);
 
       final reminders = state.reminders.map((reminder) {
         return reminder.id == event.reminder.id ? event.reminder : reminder;
       }).toList();
 
-      if (previous != null) {
-        previous.locationBased
-            ? await _geofenceService.removeReminder(previous.id)
-            : await _notificationService.cancelReminder(previous);
-      }
-
       emit(state.copyWith(reminders: _sortReminders(reminders), error: null));
 
-      event.reminder.locationBased
-          ? await _geofenceService.registerReminder(event.reminder)
-          : await _notificationService.scheduleReminder(event.reminder);
-
       event.onSuccess?.call();
-    } catch (_) {
-      emit(state.copyWith(error: 'Failed to update reminder.'));
-      event.onError?.call('Failed to update reminder.');
+    } catch (error, stackTrace) {
+      _log('Failed to update reminder', error, stackTrace);
+      // Rollback to previous data and schedule if available
+      if (previous != null) {
+        await _repository.saveReminder(previous);
+        await _registerReminder(previous);
+      }
+
+      emit(state.copyWith(
+          error: 'Failed to update reminder. ${_errorLabel(error)}'));
+      event.onError
+          ?.call('Failed to update reminder. ${_errorLabel(error)}');
     }
   }
 
@@ -162,5 +171,32 @@ class ReminderListBloc extends Bloc<ReminderListEvent, ReminderListState> {
         return a.title.toLowerCase().compareTo(b.title.toLowerCase());
       });
     return next;
+  }
+
+  Future<void> _registerReminder(Reminder reminder) async {
+    if (reminder.locationBased) {
+      await _geofenceService.registerReminder(reminder);
+    } else {
+      await _notificationService.scheduleReminder(reminder);
+    }
+  }
+
+  Future<void> _cleanupReminder(Reminder reminder) async {
+    if (reminder.locationBased) {
+      await _geofenceService.removeReminder(reminder.id);
+    } else {
+      await _notificationService.cancelReminder(reminder);
+    }
+  }
+
+  String _errorLabel(Object error) {
+    final text = error.toString();
+    if (text.isEmpty) return '';
+    return text;
+  }
+
+  void _log(String message, Object error, StackTrace stackTrace) {
+    final detail = '$message: $error';
+    log(detail, name: 'ReminderListBloc', stackTrace: stackTrace);
   }
 }
