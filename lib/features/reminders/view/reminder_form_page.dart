@@ -16,12 +16,14 @@ class ReminderFormPage extends StatelessWidget {
     return BlocBuilder<ReminderFormCubit, ReminderFormState>(
       builder: (context, state) {
         final isEditing = state.editing != null;
+
         return Scaffold(
           appBar: AppBar(
               leading: IconButton(
                 onPressed: () => Navigator.of(context).maybePop(),
                 icon: const Icon(Icons.arrow_back_ios_new_rounded),
               ),
+              centerTitle: true,
               title: Text(
                 isEditing ? 'Edit Reminder' : 'Add Reminder',
                 style: Theme.of(context)
@@ -32,32 +34,32 @@ class ReminderFormPage extends StatelessWidget {
           backgroundColor: AppColors.background,
           body: SafeArea(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 160),
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 160),
               child: Column(
                 children: [
                   ReminderTitleField(value: state.title),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   ReminderDescriptionField(value: state.description),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   ReminderTypeSelector(isLocationReminder: state.locationBased),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   if (!state.locationBased) ...[
-                    ReminderTimeSection(times: state.times),
-                    const SizedBox(height: 20),
                     ReminderDateSection(date: state.date),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 16),
+                    ReminderTimeSection(times: state.times),
+                    const SizedBox(height: 16),
                     ReminderRepeatSection(selected: state.repeat),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 16),
                   ],
                   if (state.locationBased) ...[
                     ReminderLocationSection(
                       latitude: state.latitude,
                       longitude: state.longitude,
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 16),
                   ],
                   ReminderCategorySection(selected: state.category),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   ReminderPrioritySection(selected: state.priority),
                 ],
               ),
@@ -65,7 +67,7 @@ class ReminderFormPage extends StatelessWidget {
           ),
           bottomNavigationBar: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

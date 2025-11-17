@@ -36,15 +36,14 @@ class ReminderLocationSection extends StatelessWidget {
           label: 'Location Reminder',
         ),
         BlocProvider(
-          create: (_) => ReminderLocationCubit(
-            formCubit,
-            initialAddress: initialLabel,
-          )..bootstrap(latitude: latitude, longitude: longitude),
-          child: _LocationInputSection(
-            latitude: latitude,
-            longitude: longitude,
-          ),
-        ),
+            create: (_) => ReminderLocationCubit(
+                  formCubit,
+                  initialAddress: initialLabel,
+                )..bootstrap(latitude: latitude, longitude: longitude),
+            child: _LocationInputSection(
+              latitude: latitude,
+              longitude: longitude,
+            )),
       ],
     );
   }
@@ -201,9 +200,8 @@ class _LocationMap extends StatelessWidget {
                     )),
             children: [
               TileLayer(
-                urlTemplate:
-                    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                subdomains: const ['a', 'b', 'c'],
+                // Use the main OSM endpoint (avoid subdomains per OSM guidance)
+                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                 userAgentPackageName: 'com.example.reminder_app',
               ),
               if (hasSelection && selectedPoint != null)

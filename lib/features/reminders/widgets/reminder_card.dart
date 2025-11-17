@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../core/app_theme.dart';
 import '../models/reminder.dart';
@@ -16,119 +17,118 @@ class ReminderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-          color: AppColors.card,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.border),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x0C101828),
-              blurRadius: 20,
-              offset: Offset(0, 4),
-            ),
-          ]),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ListTile(
-              contentPadding: EdgeInsets.zero,
-              minTileHeight: 0,
-              minVerticalPadding: 8,
-              title: Text(reminder.title,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  )),
-              subtitle: (reminder.description ?? '').trim().isNotEmpty
-                  ? Text(reminder.description!.trim(),
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodySmall
-                          ?.copyWith(color: Colors.grey))
-                  : null,
-              trailing: InkWell(
-                // tooltip: 'More',
-                // style: IconButton.styleFrom(
-                //     backgroundColor: AppColors.muted,
-                //     shape: const CircleBorder()),
-                borderRadius: BorderRadius.circular(100),
-                onTap: onMenuTap,
-                child: Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.muted
-                  ),
-                  padding: const EdgeInsets.all(8),
-                  child: const Icon(
-                    Icons.edit_attributes_rounded,
-                    color: AppColors.mutedForeground,
-                  ),
-                ),
-              )),
-          if (!reminder.locationBased && reminder.times.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(
-                  Icons.access_time_filled_rounded,
-                  size: 16,
-                  color: AppColors.mutedForeground,
-                ),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(reminder.times.join(' • '),
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: AppColors.mutedForeground,
+    return Card(
+      // padding: const EdgeInsets.all(16),
+      // decoration: BoxDecoration(
+      //     color: AppColors.card,
+      //     borderRadius: BorderRadius.circular(12),
+      //     border: Border.all(color: AppColors.border),
+      //     boxShadow: const [
+      //       BoxShadow(
+      //         color: Color(0x0C101828),
+      //         blurRadius: 20,
+      //         offset: Offset(0, 4),
+      //       ),
+      //     ]),
+      elevation: 1,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListTile(
+                contentPadding: EdgeInsets.zero,
+                minTileHeight: 0,
+                minVerticalPadding: 8,
+                title: Text(reminder.title,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    )),
+                subtitle: (reminder.description ?? '').trim().isNotEmpty
+                    ? Text(reminder.description!.trim(),
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall
+                            ?.copyWith(color: Colors.grey))
+                    : null,
+                trailing: InkWell(
+                  borderRadius: BorderRadius.circular(100),
+                  onTap: onMenuTap,
+                  child: Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.primary.withOpacity(0.4)),
+                      padding: const EdgeInsets.all(8),
+                      child: const Icon(
+                        Icons.more_horiz_rounded,
+                        color: AppColors.card,
                       )),
-                ),
-              ],
-            ),
-          ],
-          if (reminder.locationBased &&
-              (reminder.location ?? '').isNotEmpty) ...[
-            const SizedBox(height: 8),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(Icons.place_rounded,
-                    size: 16, color: AppColors.mutedForeground),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(reminder.location!,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: AppColors.mutedForeground,
-                      )),
-                ),
-              ],
-            ),
-          ],
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              _Pill(
-                label: _categoryLabel(reminder.category),
-                backgroundColor: _categoryBackground(reminder.category),
-                foregroundColor: _categoryColor(reminder.category),
-              ),
-              _Pill(
-                label: '${_priorityLabel(reminder.priority)} Priority',
-                backgroundColor: _priorityBackground(reminder.priority),
-                foregroundColor: _priorityColor(reminder.priority),
-              ),
-              if (reminder.locationBased)
-                const _Pill(
-                  label: 'Location-based',
-                  backgroundColor: AppColors.muted,
-                  foregroundColor: AppColors.mutedForeground,
-                ),
+                )),
+            if (!reminder.locationBased && reminder.times.isNotEmpty) ...[
+              _fieldbuilder(
+                  theme: theme,
+                  icon: Icons.access_time_filled_rounded,
+                  value: reminder.times.join(' • ')),
+              _fieldbuilder(
+                  theme: theme,
+                  icon: Icons.date_range_rounded,
+                  value: DateFormat('EEEE, MM dd yyyy').format(reminder.date)),
             ],
-          ),
-        ],
+            if (reminder.locationBased && (reminder.location ?? '').isNotEmpty)
+              _fieldbuilder(
+                  theme: theme,
+                  icon: Icons.place_rounded,
+                  value: reminder.location ?? '-'),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                _Pill(
+                  label: _categoryLabel(reminder.category),
+                  backgroundColor: _categoryBackground(reminder.category),
+                  foregroundColor: _categoryColor(reminder.category),
+                ),
+                _Pill(
+                  label: '${_priorityLabel(reminder.priority)} Priority',
+                  backgroundColor: _priorityBackground(reminder.priority),
+                  foregroundColor: _priorityColor(reminder.priority),
+                ),
+                if (reminder.locationBased)
+                  const _Pill(
+                      label: 'Location-based',
+                      backgroundColor: AppColors.muted,
+                      foregroundColor: AppColors.mutedForeground),
+              ],
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  Widget _fieldbuilder({
+    required ThemeData theme,
+    required IconData icon,
+    required String value,
+  }) {
+    return Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, size: 16, color: AppColors.mutedForeground),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text(
+                value,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: AppColors.mutedForeground,
+                ),
+              ),
+            ),
+          ],
+        ));
   }
 
   static String _categoryLabel(ReminderCategory category) {
