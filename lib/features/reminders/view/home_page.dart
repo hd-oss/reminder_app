@@ -241,30 +241,23 @@ class _RemindersList extends StatelessWidget {
                 .read<ReminderListBloc>()
                 .add(const ReminderListEvent.remindersRequested());
           },
-          child: ListView.separated(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              if (state.error != null && reminders.isEmpty) {
-                return _ErrorState(message: state.error!);
-              }
-              if (reminders.isEmpty) return _EmptyState();
-
-              return ReminderCard(
-                  reminder: reminders[index],
-                  onMenuTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (_) => BlocProvider(
-                                  create: (_) => ReminderFormCubit(
-                                    reminder: reminders[index],
-                                  ),
-                                  child: const ReminderFormPage(),
-                                )),
-                      ));
-            },
-            separatorBuilder: (_, __) => const SizedBox(height: 8),
-            itemCount: reminders.length,
-          ),
+          child: reminders.isNotEmpty
+              ? ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemBuilder: (context, index) => ReminderCard(
+                      reminder: reminders[index],
+                      onMenuTap: () => onOpenForm(context, reminders[index])),
+                  separatorBuilder: (_, __) => const SizedBox(height: 8),
+                  itemCount: reminders.length)
+              : SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: SizedBox(
+                    height: MediaQuery.sizeOf(context).height / 1.4,
+                    child: state.error != null && reminders.isEmpty
+                        ? _ErrorState(message: state.error!)
+                        : _EmptyState(),
+                  )),
         );
       },
     );
